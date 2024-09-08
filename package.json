@@ -4,12 +4,13 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "npx prisma db push && npx prisma generate && next build",
     "start": "next start",
     "lint": "next lint"
   },
   "dependencies": {
     "@heroicons/react": "^2.1.5",
+    "@prisma/client": "^5.19.1",
     "clsx": "^2.1.1",
     "next": "14.2.6",
     "react": "^18",
