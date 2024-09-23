@@ -5,7 +5,8 @@ import type { expenses as ExpenseType } from '@prisma/client'
 type ExpenseTypeOmitId = Omit<ExpenseType, 'id'>
 
 type Data = {
-  text: string;
+  text?: string;
+  expenses?: ExpenseType[];
 }
 
 export default async function handler(
@@ -16,8 +17,8 @@ export default async function handler(
   try {
     switch (req.method) {
       case 'GET':
-        const expenseToRetrieve = await prismaClient.expenses.findFirst()
-        res.status(200).json({text: JSON.stringify(expenseToRetrieve)})
+        const expensesToRetrieve = await prismaClient.expenses.findMany()
+        res.status(200).json({ expenses: expensesToRetrieve})
         break;
       case 'POST':
         const { amount, category, notes } = req.body;
