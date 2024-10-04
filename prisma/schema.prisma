@@ -38,5 +38,5 @@ model expenses {
   id       String @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   amount   Int
   category String
-  notes    String
+  description    String
 }

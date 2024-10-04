@@ -21,11 +21,12 @@ export default async function handler(
         res.status(200).json({ expenses: expensesToRetrieve})
         break;
       case 'POST':
-        const { amount, category, notes } = req.body;
+        const { amount, category, description } = req.body;
+        console.log('req body here', req.body)
         const expenseToCreate: ExpenseTypeOmitId = {
           amount,
           category,
-          notes
+          description
         }
         await prismaClient.expenses.create({
           data: expenseToCreate
@@ -38,6 +39,7 @@ export default async function handler(
     }
   } catch (error: unknown) {
       let message: string = "";
+      console.log(error)
       if (error instanceof Error) {
         message = `Things exploded (${error.message})`;
       } else {

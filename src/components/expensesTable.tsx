@@ -46,7 +46,7 @@ export default function ExpensesTable() {
                 <div className="flex items-center">
                   <div className="min-w-0">
                     <p className="truncate text-sm font-semibold md:text-base">
-                      {expense.notes}
+                      {expense.description}
                     </p>
                     <p className="hidden text-sm text-gray-500 sm:block">
                       {expense.category}
