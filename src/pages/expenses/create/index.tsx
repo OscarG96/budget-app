@@ -1,26 +1,48 @@
 import { CurrencyDollarIcon } from "@heroicons/react/24/outline"
 import Link from "next/link"
+import { useState, FormEvent  } from "react";
+import axios from "axios";
+
 export default function createForm() {
   const categories = [
-    {
-      id: 1,
-      name: 'Categoria 1'
-    },
-    {
-      id: 2,
-      name: 'Categoria 2'
-    },
-    {
-      id: 3,
-      name: 'Categoria 3'
-    },
-  ]
+    { name: 'Auto', id: '1'},
+    { name: 'Home', id: '2'},
+    { name: 'Eat out', id: '3'},
+    { name: 'Health', id: '4'},
+]
+  const [formData, setFormData] = useState({
+    description: '',
+    category: '',
+    amount: 0
+  })
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: name == 'amount' ? parseFloat(value) : value,
+    });
+  };
+
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault()
+
+    try {
+      // Use axios or fetch to send data to the server
+      console.log(formData)
+      const response = await axios.post('/api/expenses', formData)
+      console.log('Response:', response);
+    } catch (error) {
+      console.error('Error uploading form:', error);
+    }
+  }
+
   return (
     <div className="flex w-full flex-col max-w-4xl mx-auto px-4 sm:px-4 lg:px-6">
       <h2 className={`mb-4 text-xl md:text-2xl`}>
         Create Expense
       </h2>
-      <form action="">
+      <form onSubmit={handleSubmit}>
         <div className="rounded-md bg-gray-50 p-4 md:p-6">
           <label 
             htmlFor="description"
@@ -31,6 +53,9 @@ export default function createForm() {
           <input
             id="description"
             type="text"
+            name="description"
+            value={formData.description}
+            onChange={handleChange}
             className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
           />
           <div className="relative">
@@ -38,13 +63,15 @@ export default function createForm() {
               Choose category
             </label>
             <select 
-              name="" 
+              name="category" 
               id="category"
+              value={formData.category}
+              onChange={handleChange}
               className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
               >
               <option value="">Select a category</option>
               {categories.map((category) => (
-                <option key={category.id} value={category.id}>
+                <option key={category.id} value={category.name}>
                   {category.name}
                 </option>
               ))}
@@ -61,7 +88,9 @@ export default function createForm() {
                 name="amount"
                 type="number"
                 step="0.01"
-                placeholder="Enter USD amount"
+                value={formData.amount}
+                onChange={handleChange}
+                placeholder="Enter amount"
                 className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
                 aria-describedby="customer-error"
               />
