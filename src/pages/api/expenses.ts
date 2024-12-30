@@ -1,4 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from "next";
+import { PrismaClient, Expenses, Prisma } from "@prisma/client";
+
+const prisma = new PrismaClient()
+
 type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE';
 type Handler = (req: NextApiRequest, res: NextApiResponse) => Promise<void>;
 
@@ -30,5 +34,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
 const getRequest = async () => {
-    return Promise.resolve("OK")
+    const expenses = prisma.expenses.findMany({
+      where: { authorId: 1 }
+    })
+    return Promise.resolve(expenses)
+}
+
+const postRequest = async (expense: Expenses) => {
+  await prisma.expenses.create({
+    data: {
+      amount: expense.amount,
+      description: expense.description,
+      author: "Oscar" 
+    }
+  })
 }
