@@ -1,9 +1,9 @@
 import NextAuth from 'next-auth';
-import { authConfig } from '@/auth';
-import Credentials from 'next-auth/providers/credentials';
 import { z } from 'zod';
 import { PrismaClient, User } from "@prisma/client";
 import bcrypt from 'bcrypt';
+import type { AuthOptions } from 'next-auth';
+import CredentialsProvider from 'next-auth/providers/credentials';
 
 const prisma = new PrismaClient()
 
@@ -17,23 +17,25 @@ async function getUser(email: string): Promise<User | null> {
     }
 }
 
-export const { auth, signIn, signOut } = NextAuth({
-    ...authConfig,
-    providers: [Credentials({
-        async authorize(credentials) {
-            const parsedCredentials = z
-                .object({ email: z.string().email(), password: z.string().min(6) })
-                .safeParse(credentials);
-            if (parsedCredentials.success) {
-                const { email, password } = parsedCredentials.data;
-                const user = await getUser(email);
-                if (!user) return null;
-                const passwordsMatch = await bcrypt.compare(password, user.password);
-                
-                if (passwordsMatch) return user;
-            }
-            console.log('Invalid credentials');
-            return null
-        },
-    }),],
-});
+export const authOptions: AuthOptions = {
+  providers: [
+    CredentialsProvider({
+      name: 'Credentials',
+      credentials: {
+        username: { label: 'Username', type: 'text' },
+        password: { label: 'Password', type: 'password' },
+      },
+      async authorize(credentials, req) {
+        const user = { id: '1', name: 'John Doe', email: 'john@example.com' };
+        
+        if (credentials?.username === 'john' && credentials?.password === 'password123') {
+          return user;
+        }
+        return null;
+      },
+    }),
+  ],
+  secret: process.env.NEXTAUTH_SECRET,
+};
+
+export default NextAuth(authOptions);

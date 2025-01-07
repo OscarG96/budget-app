@@ -1,6 +1,7 @@
 import Image from "next/image";
 import NavLinks from "./nav-links";
 import { PowerIcon } from '@heroicons/react/24/outline';
+import LoginBtn from "./login-btn";
 
 
 export default function Navbar() {
@@ -32,6 +33,9 @@ export default function Navbar() {
             </Image>
             <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start space-x-2 space-y-2">
                 <NavLinks />
+            </div>
+            <div>
+                <LoginBtn></LoginBtn>
             </div>
             
         </nav>
