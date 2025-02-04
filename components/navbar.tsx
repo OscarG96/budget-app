@@ -1,43 +1,54 @@
-import Image from "next/image";
-import NavLinks from "./nav-links";
-import { PowerIcon } from '@heroicons/react/24/outline';
-import LoginBtn from "./login-btn";
+import Link from 'next/link';
+import logo from '../public/next.svg';
 
+const Navbar = () => {
 
-export default function Navbar() {
-    return (
-        // <div className="flex flex-row px-3 py-4 md:px-2 bg-slate-600">
-        //     <div className="flex grow flex-row justify-between space-x-2 md:flex-col md:space-x-0 md:space-y-2">
-        //         <NavLinks />
-        //         <div className="hidden h-auto w-full grow rounded-md bg-gray-50 md:block"></div>
-        //         <form
-        //             // action={async () => {
-        //             //     'use server';
-        //             //     await signOut();
-        //             // }}
-        //         >
-        //             <button className="flex h-[48px] w-full grow items-center justify-center gap-2 rounded-md bg-gray-50 p-3 text-sm font-medium hover:bg-sky-100 hover:text-blue-600 md:flex-none md:justify-start md:p-2 md:px-3">
-        //                 <PowerIcon className="w-6" />
-        //                 <div className="hidden md:block">Sign Out</div>
-        //             </button>
-        //         </form>
-        //     </div>
-        // </div>
-        <nav className="flex flex-row content-center bg-slate-600">
-            <Image 
-                src="./mark.svg"
-                alt="logo"
-                width={50}
-                height={50}
-            >
-            </Image>
-            <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start space-x-2 space-y-2">
-                <NavLinks />
+  // const linkClass = ({ isActive }: { isActive: boolean }) => isActive ? 'bg-black text-white hover:bg-gray-900 hover:text-white rounded-md px-3 py-2' : 'text-white hover:bg-gray-900 hover:text-white rounded-md px-3 py-2'
+  return (
+    <nav className="bg-gray-700 border-b border-gray-500">
+      <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
+        <div className="flex h-20 items-center justify-between">
+          <div
+            className="flex flex-1 items-center justify-center md:items-stretch md:justify-start"
+          >
+            {/* Logo */}
+            <Link className="flex flex-shrink-0 items-center mr-4" href="/">
+              <img
+                className="h-10 w-auto"
+                src={ logo }
+                alt="Budget App"
+              />
+              <span className="hidden md:block text-white text-2xl font-bold ml-2">
+                Budget App
+              </span>
+            </Link>
+            <div className="md:ml-auto">
+              <div className="flex space-x-2">
+                <Link
+                  href="/"
+                  className="text-white hover:bg-gray-900 hover:text-white rounded-md px-3 py-2"
+                >
+                  Home
+                </Link>
+                <Link
+                  href="/jobs"
+                  className="text-white hover:bg-gray-900 hover:text-white rounded-md px-3 py-2"
+                >
+                  Jobs
+                </Link>
+                <Link
+                  href="/add-job"
+                  className="text-white hover:bg-gray-900 hover:text-white rounded-md px-3 py-2"
+                >
+                  Add Job
+                </Link>
+              </div>
             </div>
-            <div>
-                <LoginBtn></LoginBtn>
-            </div>
-            
-        </nav>
-    )
+          </div>
+        </div>
+      </div>
+    </nav>
+  )
 }
+
+export default Navbar
