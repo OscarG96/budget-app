@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import logo from '../public/next.svg';
+import LoginBtn from './login-btn';
 
 const Navbar = () => {
 
@@ -14,9 +14,11 @@ const Navbar = () => {
             {/* Logo */}
             <Link className="flex flex-shrink-0 items-center mr-4" href="/">
               <img
-                className="h-10 w-auto"
-                src={ logo }
+                src="/next.svg"
                 alt="Budget App"
+                className="dark:invert"
+                width={100}
+                height={24}
               />
               <span className="hidden md:block text-white text-2xl font-bold ml-2">
                 Budget App
@@ -31,17 +33,18 @@ const Navbar = () => {
                   Home
                 </Link>
                 <Link
-                  href="/jobs"
+                  href="/expenses/all"
                   className="text-white hover:bg-gray-900 hover:text-white rounded-md px-3 py-2"
                 >
-                  Jobs
+                  Expenses
                 </Link>
                 <Link
-                  href="/add-job"
+                  href="/expenses/add-expense"
                   className="text-white hover:bg-gray-900 hover:text-white rounded-md px-3 py-2"
                 >
-                  Add Job
+                  Add Expense
                 </Link>
+                <LoginBtn />
               </div>
             </div>
           </div>

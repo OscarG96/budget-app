@@ -7,15 +7,19 @@ export default function LoginBtn() {
   if (session) {
     return (
       <>
-        Signed in as {session?.user?.email} <br />
-        <button onClick={() => signOut()}>Sign out</button>
+        <small>
+          {session?.user?.email} <br />
+          <button onClick={() => signOut()}>Sign out</button>
+        </small>
       </>
     )
   }
   return (
     <>
-      Not signed in <br />
-      <button onClick={() => signIn()}>Sign in</button>
+      <small>
+        Not signed in <br />
+        <button onClick={() => signIn()}>Sign in</button>
+      </small>
     </>
   )
 }

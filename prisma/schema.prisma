@@ -13,6 +13,7 @@ model User {
   name      String?  @db.VarChar(255)
   email     String   @unique @db.VarChar(255)
   password  String
+  categories String[] @default([])
   expenses  Expenses[]
   budgets   Budget[]
 }
@@ -20,7 +21,8 @@ model User {
 model Expenses {
   id          Int    @id @default(autoincrement())
   amount      Int
-  description String    
+  description String
+  category    String
   author      User @relation(fields: [authorId], references: [id])
   authorId    Int
 }
