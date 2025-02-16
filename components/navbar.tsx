@@ -33,7 +33,7 @@ const Navbar = () => {
                   Home
                 </Link>
                 <Link
-                  href="/expenses/all"
+                  href="/expenses"
                   className="text-white hover:bg-gray-900 hover:text-white rounded-md px-3 py-2"
                 >
                   Expenses

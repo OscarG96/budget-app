@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import Spinner from './Spinner';
 import { Expenses } from '@prisma/client';
 
-const all = () => {
+const RecentExpenses = () => {
   const [loading, setLoading] = useState(true);
 
   const [expenses, setExpenses] = useState<Expenses[]>([]);
@@ -56,4 +56,4 @@ const all = () => {
   )
 }
 
-export default all
+export default RecentExpenses

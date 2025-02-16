@@ -3,7 +3,7 @@ import { Expenses } from '@prisma/client'
 import React, { useEffect, useState } from 'react'
 import Spinner from '../../../components/Spinner';
 
-const All = () => {
+const AllExpenses = () => {
 
   const [sortKey, setSortKey] = useState("date");
   const [sortOrder, setSortOrder] = useState("desc");
@@ -96,4 +96,4 @@ const All = () => {
   )
 }
 
-export default All
+export default AllExpenses

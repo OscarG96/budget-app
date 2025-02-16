@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { Inter } from "next/font/google";
-import Expenses from "../../components/Expenses";
+import Expenses from "../../components/RecentExpenses";
 import { useSession, signIn, signOut } from "next-auth/react"
 import Link from "next/link";
 

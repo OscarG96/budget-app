@@ -1,6 +1,6 @@
 export { default } from "next-auth/middleware"
 
-export const config = { matcher: ["/expenses/all", "/expenses/add-expense"] }
+export const config = { matcher: ["/expenses", "/expenses/add-expense"] }
  
 
 
