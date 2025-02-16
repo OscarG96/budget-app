@@ -1,5 +1,5 @@
 import { useSession, signIn, signOut } from "next-auth/react"
-import { Session } from "next-auth";
+import Link from "next/link";
 
 
 export default function LoginBtn() {
@@ -9,7 +9,7 @@ export default function LoginBtn() {
       <>
         <small>
           {session?.user?.email} <br />
-          <button onClick={() => signOut()}>Sign out</button>
+          <button className="text-white" onClick={() => signOut()}>Sign out</button>
         </small>
       </>
     )
@@ -17,8 +17,8 @@ export default function LoginBtn() {
   return (
     <>
       <small>
-        Not signed in <br />
-        <button onClick={() => signIn()}>Sign in</button>
+        <button className="text-white" onClick={() => signIn()}>Sign in</button> <br />
+        <Link className="text-white" href="/login/register">Register</Link>
       </small>
     </>
   )

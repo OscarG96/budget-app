@@ -14,10 +14,19 @@ interface AuthenticatedRequest extends NextApiRequest {
   user?: User;
 }
 
+interface GetRequestQuery {
+  limit?: number;
+}
+
 const handlers: Record<HttpMethod, Handler> = {
-    GET: async (req: NextApiRequest, res: NextApiResponse) => {
-        const data = await getRequest();
-        res.status(200).json({message: "GET request handled", data})
+    GET: async (req: AuthenticatedRequest, res: NextApiResponse) => {
+        if (req.user) {
+          const query = req.query;
+          const expenses = await getRequest(req.user, query);
+          res.status(200).json({ message: "GET request handled", expenses });
+        } else {
+          res.status(400).json({ message: "User not found" });
+        }
     }, 
     POST: async (req: AuthenticatedRequest, res: NextApiResponse) => {
         const expense = req.body;
@@ -47,11 +56,16 @@ export default async function handler(req: AuthenticatedRequest, res: NextApiRes
     }
   }
 
-const getRequest = async () => {
-    const expenses = prisma.expenses.findMany({
-      where: { authorId: 1 }
-    })
-    return Promise.resolve(expenses)
+const getRequest = async (user: User, query: GetRequestQuery): Promise<Expenses[]> => {
+  if (query.limit) {
+    return prisma.expenses.findMany({
+      where: { authorId: user.id },
+      take: Number(query.limit)
+    });
+  }
+  return prisma.expenses.findMany({
+    where: { authorId: user.id }
+  });
 }
 
 const postRequest = async (expense: Expenses, user: User) => {

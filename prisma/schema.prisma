@@ -23,6 +23,7 @@ model Expenses {
   amount      Int
   description String
   category    String
+  date        DateTime @default(now())
   author      User @relation(fields: [authorId], references: [id])
   authorId    Int
 }
