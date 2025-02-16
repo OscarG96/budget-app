@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { Session } from "next-auth";
 import { authOptions } from "./auth/[...nextauth]";
 import { PrismaClient, User } from "@prisma/client";
-import { getUserSession } from "../lib/session";
+import { getUserSession } from "./lib/session";
 type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE';
 type Handler = (req: AuthenticatedRequest, res: NextApiResponse) => Promise<void>;
 
