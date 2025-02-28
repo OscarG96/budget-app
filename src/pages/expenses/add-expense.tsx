@@ -13,7 +13,7 @@ const AddExpense = () => {
 
   const submitForm = (e: React.FormEvent) => {
     e.preventDefault()
-    fetch('http://localhost:3000/api/expenses', {
+    fetch('/api/expenses', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -32,7 +32,7 @@ const AddExpense = () => {
 
   useEffect(() => {
     const fetchCategories = async() => {
-      fetch('http://localhost:3000/api/categories')
+      fetch('/api/categories')
         .then((res) => res.json())
         .then((data) => {
           const { categories } = data

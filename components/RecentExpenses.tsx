@@ -11,7 +11,7 @@ const RecentExpenses = () => {
     const fetchExpenses = async () => {
       try {
         // Fetch expenses from the API
-        const res = await fetch('http://localhost:3000/api/expenses?limit=5');
+        const res = await fetch('/api/expenses?limit=5');
         const data = await res.json();
         console.log(data);
         setExpenses(data.expenses);
