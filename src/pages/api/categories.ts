@@ -46,3 +46,9 @@ const getRequest = async (user: User) => {
       where: { email: user?.email ?? undefined }, 
       select: {categories: true}})
 }
+
+// const createDefaultCategories = async (user: User) => {
+//   return prisma.user.update({
+
+//   })
+// }

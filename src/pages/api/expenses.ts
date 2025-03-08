@@ -59,11 +59,17 @@ export default async function handler(req: AuthenticatedRequest, res: NextApiRes
 const getRequest = async (user: User, query: GetRequestQuery): Promise<Expenses[]> => {
   if (query.limit) {
     return prisma.expenses.findMany({
+      orderBy: {
+        id: "desc", // Sort by highest ID first
+      },
       where: { authorId: user.id },
       take: Number(query.limit)
     });
   }
   return prisma.expenses.findMany({
+    orderBy: {
+      id: "desc", // Sort by highest ID first
+    },
     where: { authorId: user.id }
   });
 }

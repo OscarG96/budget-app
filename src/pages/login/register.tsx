@@ -1,3 +1,5 @@
+import { signIn } from 'next-auth/react';
+import { useRouter } from 'next/router';
 import { useState } from 'react';
 
 export default function Register() {
@@ -7,24 +9,33 @@ export default function Register() {
   const [name, setName] = useState('');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const router = useRouter();
 
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const response = await fetch('/api/register', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, email, password }),
-    });
+    try {
+      const response = await fetch('/api/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email, password }),
+      });
 
-    const data = await response.json();
+      const data = await response.json();
 
-    if (response.ok) {
-      setSuccess(data.message);
-      setError('');
-    } else {
-      setError(data.message);
+      if (!response.ok) {
+        throw new Error(data.message || "Registration failed");
+      }
+      
+      const result = await signIn("credentials", { username: email, password, redirect: false });
+
+      if (result?.error) {
+        throw new Error(result.error);
+      }
+      router.push("/");
+    } catch (error) {
+      setError((error as Error).message);
       setSuccess('');
     }
   };

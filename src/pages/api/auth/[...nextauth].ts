@@ -31,11 +31,13 @@ export const authOptions: AuthOptions = {
       },
       async authorize(credentials, req) {
         // const user = { id: '1', name: 'John Doe', email: 'john@example.com' };
+        console.log('credentias', credentials)
         if (!credentials?.username) {
           return null;
         }
         const user = await getUser(credentials.username);
         if (!user) {
+          console.log('User not found')
           return null;
         }
         const passwordsMatch = await bcrypt.compare(credentials.password, user.password);

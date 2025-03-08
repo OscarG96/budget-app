@@ -2,8 +2,11 @@ import { ArrowsUpDownIcon } from '@heroicons/react/24/outline'
 import { Expenses } from '@prisma/client'
 import React, { useEffect, useState } from 'react'
 import Spinner from '../../../components/Spinner';
+import { useRouter } from 'next/router';
 
 const AllExpenses = () => {
+
+  const router = useRouter()
 
   const [sortKey, setSortKey] = useState("date");
   const [sortOrder, setSortOrder] = useState("desc");
@@ -27,7 +30,7 @@ const AllExpenses = () => {
     }, [])
 
   const fields = expenses.length > 0 
-    ? Object.keys(expenses[0]).filter(field => field !== "id") 
+    ? Object.keys(expenses[0]).filter(field => !["authorId", "id"].includes(field)) 
     : [];
 
   const handleSort = (key: string) => {
@@ -59,6 +62,7 @@ const AllExpenses = () => {
             <button
               className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 w-full focus:outline-none focus:shadow-outline"
               type="button"
+              onClick={() => router.push('/expenses/add-expense')}
             >
               Add Expense
             </button>

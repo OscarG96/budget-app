@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import Spinner from '../../../components/Spinner'
+import { toast } from "react-toastify"
 
 const AddExpense = () => {
   const [loading, setLoading] = useState(true);
@@ -21,12 +22,22 @@ const AddExpense = () => {
       body: JSON.stringify(expense)
     }).then((res) => {
       if (res.ok) {
-        console.log('Expense added')
+        toast.success("Expense added successfully")
+        clearForm()
       } else {
-        console.log('Error adding expense')
+        toast.success("Failed to add expense")
       }
     }).catch((error) => {
       console.log(error)
+    })
+  }
+
+  const clearForm = () => {
+    setExpense({
+      amount: 0,
+      description: '',
+      category: 'home',
+      date: new Date().toISOString().split("T")[0]
     })
   }
 

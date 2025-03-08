@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import bcrypt from "bcryptjs";
 import { PrismaClient } from "@prisma/client";
+import { signIn } from "next-auth/react";
 
 const prisma = new PrismaClient();
 
@@ -27,10 +28,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         name,
         email,
         password: hashedPassword,
+        categories: ["home","food","transport","utilities","clothing","insurance","health","personal","debt","education","entertainment","savings","other"]
       },
     });
 
-    res.status(201).json({ message: "User registered successfully", user });
+    res.status(201).json({ message: "User registered", user });
   } catch (error) {
     console.log(error)
     res.status(500).json({ message: "Error registering user", error });
