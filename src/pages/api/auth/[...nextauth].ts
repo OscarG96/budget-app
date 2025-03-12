@@ -1,25 +1,8 @@
 import NextAuth from 'next-auth';
-import { z } from 'zod';
-import { PrismaClient, User } from "@prisma/client";
 import bcrypt from 'bcryptjs';
 import type { AuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
-
-const prisma = new PrismaClient()
-
-async function getUser(email: string) {
-    try {
-        // const user = await sql<User>`SELECT * FROM users WHERE email=${email}`;
-        const user = await prisma.user.findFirst({ where: { email } });
-        if (!user) {
-            return null;
-        }
-        return { ...user, id: user.id.toString() };
-    } catch (error) {
-        console.error('Failed to fetch user:', error);
-        throw new Error('Failed to fetch user.');
-    }
-}
+import { UsersService } from '../lib/services/usersService';
 
 export const authOptions: AuthOptions = {
   providers: [
@@ -30,12 +13,11 @@ export const authOptions: AuthOptions = {
         password: { label: 'Password', type: 'password' },
       },
       async authorize(credentials, req) {
-        // const user = { id: '1', name: 'John Doe', email: 'john@example.com' };
         console.log('credentias', credentials)
         if (!credentials?.username) {
           return null;
         }
-        const user = await getUser(credentials.username);
+        const user = await UsersService.getUser(credentials.username);
         if (!user) {
           console.log('User not found')
           return null;
