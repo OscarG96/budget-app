@@ -1,5 +1,6 @@
+import Spinner from '@/components/Spinner';
 import React, { useEffect, useState } from 'react'
-import Spinner from '../../../components/Spinner'
+
 import { toast } from "react-toastify"
 
 const AddExpense = () => {

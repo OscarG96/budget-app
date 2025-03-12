@@ -1,8 +1,6 @@
-import Image from "next/image";
 import { Inter } from "next/font/google";
-import Expenses from "../../components/RecentExpenses";
 import { useSession, signIn, signOut } from "next-auth/react"
-import Link from "next/link";
+import RecentExpenses from "@/components/RecentExpenses";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -12,7 +10,7 @@ export default function Home() {
     return (
       <>
       {/* metrics */}
-      <Expenses />
+      <RecentExpenses />
       </>
     );
   } else {

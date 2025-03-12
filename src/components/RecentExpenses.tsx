@@ -15,9 +15,10 @@ const RecentExpenses = () => {
         const data = await res.json();
         console.log(data);
         setExpenses(data.expenses);
-        setLoading(false);
       } catch (error) {
         console.error(error);
+      } finally {
+        setLoading(false);
       }
     }
     fetchExpenses()
