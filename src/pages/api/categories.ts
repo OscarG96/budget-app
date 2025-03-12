@@ -1,8 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { Session } from "next-auth";
-import { authOptions } from "./auth/[...nextauth]";
-import { PrismaClient, User } from "@prisma/client";
-import { getUserSession } from "./lib/session";
+import { CategoriesService } from "./lib/services/categoriesService";
+import { UsersService } from "./lib/services/usersService";
 type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE';
 type Handler = (req: AuthenticatedRequest, res: NextApiResponse) => Promise<void>;
 
@@ -11,11 +10,9 @@ interface AuthenticatedRequest extends NextApiRequest {
   user?: any;
 }
 
-const prisma = new PrismaClient();
-
 const handlers: Record<HttpMethod, Handler> = {
     GET: async (req: AuthenticatedRequest, res: NextApiResponse) => {
-        const categories = await getRequest(req.user);
+        const categories = await CategoriesService.getUserCategories(req.user)
         res.status(200).send(categories);
     }, 
     POST: async (req: NextApiRequest, res: NextApiResponse) => {
@@ -31,7 +28,7 @@ const handlers: Record<HttpMethod, Handler> = {
 }
 
 export default async function handler(req: AuthenticatedRequest, res: NextApiResponse) {
-    req.user = await getUserSession(req, res);
+    req.user = await UsersService.getUserSession(req, res);
     const method = req.method as HttpMethod;
     if (method && handlers[method] ) {
       await handlers[method](req, res);
@@ -40,15 +37,3 @@ export default async function handler(req: AuthenticatedRequest, res: NextApiRes
       res.status(405).end(`Method ${method} Not Allowed`);
     }
   }
-
-const getRequest = async (user: User) => {
-    return prisma.user.findUnique({ 
-      where: { email: user?.email ?? undefined }, 
-      select: {categories: true}})
-}
-
-// const createDefaultCategories = async (user: User) => {
-//   return prisma.user.update({
-
-//   })
-// }
