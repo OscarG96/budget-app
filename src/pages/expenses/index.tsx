@@ -1,8 +1,8 @@
 import { ArrowsUpDownIcon } from '@heroicons/react/24/outline'
 import { Expenses } from '@prisma/client'
 import React, { useEffect, useState } from 'react'
-import Spinner from '../../../components/Spinner';
 import { useRouter } from 'next/router';
+import Spinner from '@/components/Spinner';
 
 const AllExpenses = () => {
 
