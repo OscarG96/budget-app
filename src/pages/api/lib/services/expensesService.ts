@@ -3,6 +3,9 @@ import { ExpensesRepository } from "../repositories/expensesRepo";
 
 interface GetRequestQuery {
   limit?: number;
+  totalAmount?: boolean;
+  month?: number;
+  year?: number
 }
 
 export class ExpensesService {
