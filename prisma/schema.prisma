@@ -9,29 +9,63 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  name      String?  @db.VarChar(255)
-  email     String   @unique @db.VarChar(255)
+  id        Int     @id @default(autoincrement())
+  name      String  @db.VarChar(255)
+  email     String  @unique @db.VarChar(255)
   password  String
-  categories String[] @default([])
+  categories Categories[]
   expenses  Expenses[]
   budgets   Budget[]
+  plannedExpenses PlannedExpenses[]
 }
 
 model Expenses {
-  id          Int    @id @default(autoincrement())
-  amount      Int
-  description String
-  category    String
-  date        DateTime @default(now())
-  author      User @relation(fields: [authorId], references: [id])
-  authorId    Int
+  id              Int    @id @default(autoincrement())
+  amount          Int
+  description     String
+  category        Categories @relation(fields: [categoryId], references: [id])
+  categoryId      Int @default(1)
+  date            DateTime @default(now())
+  author          User @relation(fields: [authorId], references: [id])
+  authorId        Int
+  createdAt       DateTime @default(now())
 }
 
 model Budget {
   id              Int    @id @default(autoincrement())
-  month           String
+  month           Int
+  year            Int
+  category        Categories @relation(fields: [categoryId], references: [id])
+  categoryId      Int
+  monthlyLimit    Int
   plannedExpenses Json
-  author      User @relation(fields: [authorId], references: [id])
-  authorId    Int
+  author          User @relation(fields: [authorId], references: [id])
+  authorId        Int
+  @@unique([authorId, categoryId, month, year])
+}
+
+model Categories {
+  id              Int    @id @default(autoincrement())
+  name            String
+  author          User @relation(fields: [authorId], references: [id])
+  authorId        Int
+  createdAt       DateTime @default(now())
+  budget          Budget[]
+  expenses        Expenses[]
+  plannedExpenses PlannedExpenses[]
+}
+
+model PlannedExpenses {
+  id              Int    @id @default(autoincrement())
+  author          User @relation(fields: [authorId], references: [id])
+  authorId        Int
+  category        Categories @relation(fields: [categoryId], references: [id])
+  categoryId      Int
+  description     String
+  amount          Int
+  dueDate         DateTime
+  month           Int
+  year            Int
+  createdAt       DateTime @default(now())
+  @@unique([authorId, categoryId, month, year])
 }
