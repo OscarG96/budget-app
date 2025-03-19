@@ -46,21 +46,26 @@ const AllExpenses = () => {
     if (sortOrder === "asc") return a[sortKey as keyof Expenses] > b[sortKey as keyof Expenses] ? 1 : -1;
     return a[sortKey as keyof Expenses] < b[sortKey as keyof Expenses] ? 1 : -1;
   });
+
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString)
+    return date.toLocaleDateString('es-MX') // Format as MM/DD/YYYY
+  }
   
   if (loading) {
     return <Spinner loading={loading}/>;
   }
 
   return (
-    <section className="bg-blue-50 px-4 py-10">
-      <div className="container m-auto max-w-2xl py-24">
+    <section className="px-4 py-4">
+      <div className="container m-auto max-w-2xl">
         <div className='flex justify-between items-start mb-2'>
           <div>
-            <h2>All Expenses</h2>
+            <h2 className="text-2xl font-semibold">All Expenses</h2>
           </div>
           <div>
             <button
-              className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 w-full focus:outline-none focus:shadow-outline"
+              className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 w-full sm:w-auto focus:outline-none focus:shadow-outline"
               type="button"
               onClick={() => router.push('/expenses/add-expense')}
             >
@@ -68,33 +73,41 @@ const AllExpenses = () => {
             </button>
           </div>
         </div>
-        <table className="w-full border-collapse">
-          <thead>
-            <tr className="bg-gray-200">
-              {fields.map((key) => (
-                <th
-                  key={key}
-                  className="p-3 text-left cursor-pointer"
-                  onClick={() => handleSort(key)}
-                >
-                  {key.charAt(0).toUpperCase() + key.slice(1)}
-                  <ArrowsUpDownIcon className="inline-block w-4 h-4 ml-1" />
-                </th>
+
+        {/* Table with responsive scrolling */}
+        <div className="overflow-x-auto">
+          <table className="min-w-full border-collapse table-auto">
+            <thead>
+              <tr className="bg-gray-200">
+                {fields.map((key) => (
+                  <th
+                    key={key}
+                    className="p-3 text-left cursor-pointer"
+                    onClick={() => handleSort(key)}
+                  >
+                    {key.charAt(0).toUpperCase() + key.slice(1)}
+                    <ArrowsUpDownIcon className="inline-block w-4 h-4 ml-1" />
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {sortedExpenses.map((expense, index) => (
+                <tr key={index} className="border-b hover:bg-gray-100 transition-colors">
+                  {fields.map((key) => (
+                    <td key={key} className="p-3 text-sm sm:text-base">
+                    {key === "amount"
+                      ? `$${(expense[key as keyof Expenses] as number).toFixed(2)}`
+                      : key === "date"
+                      ? formatDate(String(expense[key as keyof Expenses])) // Format the date
+                      : String(expense[key as keyof Expenses])}
+                  </td>
+                  ))}
+                </tr>
               ))}
-            </tr>
-          </thead>
-          <tbody>
-          {sortedExpenses.map((expense, index) => (
-            <tr key={index} className="border-b hover:bg-gray-100 transition-colors">
-              {fields.map((key) => (
-                <td key={key} className="p-3">
-                  {key === "amount" ? `$${(expense[key as keyof Expenses] as number).toFixed(2)}` : String(expense[key as keyof Expenses])}
-                </td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-        </table>
+            </tbody>
+          </table>
+        </div>
       </div>
     </section>
   )
