@@ -33,7 +33,7 @@ export default function Register() {
       if (result?.error) {
         throw new Error(result.error);
       }
-      router.push("/");
+      router.push("/dashboard");
     } catch (error) {
       setError((error as Error).message);
       setSuccess('');

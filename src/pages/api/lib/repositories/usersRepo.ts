@@ -23,7 +23,6 @@ export class UsersRepo {
         name,
         email,
         password: hashedPassword,
-        categories: ["home","food","transport","utilities","clothing","insurance","health","personal","debt","education","entertainment","savings","other"]
       },
     });
   }

@@ -1,11 +1,15 @@
 import { NextApiRequest, NextApiResponse } from "next";
+import { UsersService } from "./lib/services/usersService";
+import { CategoriesService } from "./lib/services/categoriesService";
 type HttpMethod = 'POST';
 type Handler = (req: NextApiRequest, res: NextApiResponse) => Promise<void>;
 
 const handlers: Record<HttpMethod, Handler> = {    
     POST: async (req: NextApiRequest, res: NextApiResponse) => {
-        const data = req.body;
-        res.status(201).json({ message: "POST request handled", data });
+        const { name, email, password } = req.body;
+        const user = await UsersService.registerUser(name, email, password)
+        await CategoriesService.setDefaultCategories(user.id)
+        res.status(201).json({ message: "POST request handled", name, email });
     },
 }
 
