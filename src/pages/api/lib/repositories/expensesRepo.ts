@@ -28,6 +28,9 @@ export class ExpensesRepository {
       },
       where: { authorId: user.id, ...filters },
       take: Number(queryParams.limit) || 10,
+      include: {
+        category: true
+      }
     });
   }
 
@@ -36,7 +39,7 @@ export class ExpensesRepository {
       data: {
         amount: expense.amount,
         description: expense.description,
-        category: expense.category,
+        categoryId: expense.categoryId,
         authorId: user.id
       }
     })

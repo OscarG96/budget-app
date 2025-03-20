@@ -1,7 +1,7 @@
 import React from 'react'
 import { toast } from "react-toastify"
 
-const index = () => {
+const IncomePage = () => {
 
   const categories = ['salary', 'business', 'investment', 'others']
 
@@ -106,4 +106,4 @@ const index = () => {
   )
 }
 
-export default index
+export default IncomePage

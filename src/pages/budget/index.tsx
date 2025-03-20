@@ -1,10 +1,11 @@
 import Spinner from '@/components/Spinner';
 import { Description, Dialog, DialogBackdrop, DialogPanel, DialogTitle, Transition } from '@headlessui/react';
 import { PlusIcon } from '@heroicons/react/24/solid';
+import { Categories } from '@prisma/client';
 import React, { Fragment, useEffect, useState } from 'react'
 
-const index = () => {
-  const [categories, setCategories] = useState([])
+const BudgetPage = () => {
+  const [categories, setCategories] = useState<Categories[]>([])
   const [loading, setLoading] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
   const [newCategory, setNewCategory] = useState({ name: "", amount: "" })
@@ -13,9 +14,7 @@ const index = () => {
     const fetchCategories = async () => {
       fetch('/api/categories')
         .then((res) => res.json())
-        .then((data) => {
-          const { categories } = data
-          console.log(categories)
+        .then((categories) => {          
           setCategories(categories)
         }).catch((error) => {
           console.log(error)
@@ -40,7 +39,7 @@ const index = () => {
               <li key={index} className="bg-white p-4">
                 <div className="flex justify-between items-start">
                   <div>
-                    <p className="text-sm text-gray-600">{category}</p>
+                    <p className="text-sm text-gray-600">{category.name}</p>
                   </div>
                   <div className="text-right">
                     <p className="text-lg text-gray-800">3</p>
@@ -105,4 +104,4 @@ const index = () => {
   )
 }
 
-export default index
+export default BudgetPage

@@ -5,8 +5,12 @@ import { useEffect, useState } from "react";
 import { Expenses } from "@prisma/client";
 import Spinner from "@/components/Spinner";
 
-export default function Home() {
-  const [expenses, setExpenses] = useState<Expenses[]>([]);
+interface ExpensesTable extends Expenses {
+  category: {name: string}
+}
+
+export default function Dashboard() {
+  const [expenses, setExpenses] = useState<ExpensesTable[]>([]);
   const [totalExpenses, setTotalExpenses] = useState(0);
   const [expenseCategories, setExpensesCategories] = useState<{ name: string; value: number; fill: string }[]>([])
   const [loading, setLoading] = useState(true);
@@ -18,12 +22,12 @@ export default function Home() {
 
   const COLORS = ["#0088FE", "#00C49F", "#FFBB28"];
 
-  const formatExpenseCategories = (expenses: Expenses[]) => {
+  const formatExpenseCategories = (expenses: ExpensesTable[]) => {
     let categories = expenses.reduce((acc, expense) => {
-      if (acc[expense.category]) {
-        acc[expense.category] += expense.amount
+      if (acc[expense.category.name]) {
+        acc[expense.category.name] += expense.amount
       } else {
-        acc[expense.category] = expense.amount
+        acc[expense.category.name] = expense.amount
       }
       return acc
     }, {} as { [key: string]: number })
@@ -63,7 +67,7 @@ export default function Home() {
       }
     }
     fetchExpenses()
-  }, [])
+  }, [setExpenses, reduceTotalExpenses, formatExpenseCategories, setLoading])
 
   if (loading) {
     return <Spinner loading={loading} />;

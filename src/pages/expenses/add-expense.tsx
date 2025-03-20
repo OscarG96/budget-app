@@ -1,32 +1,40 @@
 import Spinner from '@/components/Spinner';
+import type { Categories, Expenses } from '@prisma/client';
 import React, { useEffect, useState } from 'react'
 
 import { toast } from "react-toastify"
 
 const AddExpense = () => {
   const [loading, setLoading] = useState(true);
-  const [expense, setExpense] = React.useState({
-    amount: 0, 
-    description: '', 
-    category: 'home', 
+  const [expense, setExpense] = useState({
+    amount: "", 
+    description: "", 
+    categoryId: "", 
     date: new Date().toISOString().split("T")[0]
   })
-  const [categories, setCategories] = React.useState<string[]>([])
+  const [categories, setCategories] = useState<Categories[]>([])
 
   const submitForm = (e: React.FormEvent) => {
     e.preventDefault()
+    const parsedExpense = {
+      ...expense,
+      amount: parseFloat(expense.amount),
+      categoryId: parseInt(expense.categoryId)
+    }
+    console.log(parsedExpense)
+    
     fetch('/api/expenses', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(expense)
+      body: JSON.stringify(parsedExpense)
     }).then((res) => {
       if (res.ok) {
         toast.success("Expense added successfully")
         clearForm()
       } else {
-        toast.success("Failed to add expense")
+        toast.error("Failed to add expense")
       }
     }).catch((error) => {
       console.log(error)
@@ -35,9 +43,9 @@ const AddExpense = () => {
 
   const clearForm = () => {
     setExpense({
-      amount: 0,
-      description: '',
-      category: 'home',
+      amount: "",
+      description: "",
+      categoryId: "",
       date: new Date().toISOString().split("T")[0]
     })
   }
@@ -46,10 +54,9 @@ const AddExpense = () => {
     const fetchCategories = async() => {
       fetch('/api/categories')
         .then((res) => res.json())
-        .then((data) => {
-          const { categories } = data
-          console.log(categories)
+        .then((categories) => {
           setCategories(categories)
+          setExpense({ ...expense, categoryId: categories[0].id})
         }).catch((error) => {
           console.log(error)
         }).finally(() => {
@@ -57,7 +64,7 @@ const AddExpense = () => {
         })
     }
     fetchCategories()
-  }, [])
+  }, [setCategories, setExpense])
   
   if (loading) {
     return <Spinner loading={loading} />
@@ -95,7 +102,7 @@ const AddExpense = () => {
                 placeholder="eg. 1000"
                 required
                 value={expense?.amount}
-                onChange={(e) => setExpense({ ...expense, amount: Number(e.target.value) })}
+                onChange={(e) => setExpense({ ...expense, amount: e.target.value })}
               />
             </div>
             <div className="mb-4">
@@ -107,11 +114,11 @@ const AddExpense = () => {
                 name="category"
                 className="border rounded w-full py-2 px-3"
                 required
-                value={expense?.category}
-                onChange={(e) => setExpense({ ...expense, category: e.target.value })}>
+                value={expense?.categoryId}
+                onChange={(e) => setExpense({ ...expense, categoryId: e.target.value })}>
                 {categories.map((category) => (
-                  <option key={category} value={category}>
-                    {category.charAt(0).toUpperCase() + category.slice(1).toLowerCase()}
+                  <option key={category.id} value={category.id}>
+                    {category.name}
                   </option>
                 ))}
               </select>

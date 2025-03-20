@@ -4,13 +4,17 @@ import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router';
 import Spinner from '@/components/Spinner';
 
-const AllExpenses = () => {
+interface ExpensesTable extends Expenses {
+  category: {name: string}
+}
+
+const AllExpensesPage = () => {
 
   const router = useRouter()
 
   const [sortKey, setSortKey] = useState("date");
   const [sortOrder, setSortOrder] = useState("desc");
-  const [expenses, setExpenses] = useState<Expenses[]>([]);
+  const [expenses, setExpenses] = useState<ExpensesTable[]>([]);
   const [loading, setLoading] = useState(true);
   
     useEffect(() => {
@@ -19,7 +23,6 @@ const AllExpenses = () => {
           // Fetch expenses from the API
           const res = await fetch('/api/expenses');
           const data = await res.json();
-          console.log(data);
           setExpenses(data.expenses);
           setLoading(false);
         } catch (error) {
@@ -30,7 +33,7 @@ const AllExpenses = () => {
     }, [])
 
   const fields = expenses.length > 0 
-    ? Object.keys(expenses[0]).filter(field => !["authorId", "id"].includes(field)) 
+    ? Object.keys(expenses[0]).filter(field => !["authorId", "id", "categoryId"].includes(field)) 
     : [];
 
   const handleSort = (key: string) => {
@@ -43,8 +46,8 @@ const AllExpenses = () => {
   };
 
   const sortedExpenses = [...expenses].sort((a, b) => {
-    if (sortOrder === "asc") return a[sortKey as keyof Expenses] > b[sortKey as keyof Expenses] ? 1 : -1;
-    return a[sortKey as keyof Expenses] < b[sortKey as keyof Expenses] ? 1 : -1;
+    if (sortOrder === "asc") return a[sortKey as keyof ExpensesTable] > b[sortKey as keyof ExpensesTable] ? 1 : -1;
+    return a[sortKey as keyof ExpensesTable] < b[sortKey as keyof ExpensesTable] ? 1 : -1;
   });
 
   const formatDate = (dateString: string) => {
@@ -97,10 +100,13 @@ const AllExpenses = () => {
                   {fields.map((key) => (
                     <td key={key} className="p-3 text-sm sm:text-base">
                     {key === "amount"
-                      ? `$${(expense[key as keyof Expenses] as number).toFixed(2)}`
+                      ? `$${(expense[key as keyof ExpensesTable] as number).toFixed(2)}`
                       : key === "date"
-                      ? formatDate(String(expense[key as keyof Expenses])) // Format the date
-                      : String(expense[key as keyof Expenses])}
+                      ? formatDate(String(expense[key as keyof ExpensesTable])) // Format the date
+                      : key === "category"
+                      ? expense.category.name
+                      : String(expense[key as keyof ExpensesTable])
+                      }
                   </td>
                   ))}
                 </tr>
@@ -113,4 +119,4 @@ const AllExpenses = () => {
   )
 }
 
-export default AllExpenses
+export default AllExpensesPage

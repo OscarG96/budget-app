@@ -2,9 +2,14 @@ import React, { useEffect, useState } from 'react'
 import Spinner from './Spinner';
 import { Expenses } from '@prisma/client';
 
+interface ExpensesTable extends Expenses {
+  category: {name: string}
+}
+
 type ExpensesListProps = {
-  expenses: Expenses[];
+  expenses: ExpensesTable[];
 };
+
 
 const RecentExpenses: React.FC<ExpensesListProps> = ({expenses}) => {
   
@@ -19,7 +24,7 @@ const RecentExpenses: React.FC<ExpensesListProps> = ({expenses}) => {
                 <div className="flex justify-between items-start">
                   <div>
                     <h3 className="text-lg font-semibold text-gray-800">{expense.description}</h3>
-                    <p className="text-sm text-gray-600">{expense.category}</p>
+                    <p className="text-sm text-gray-600">{expense.category.name}</p>
                   </div>
                   <div className="text-right">
                     <p className="text-lg font-bold text-gray-800">${expense.amount.toFixed(2)}</p>
