@@ -17,6 +17,8 @@ model User {
   expenses  Expenses[]
   budgets   Budget[]
   plannedExpenses PlannedExpenses[]
+  incomes   Income[]
+  savings   Savings[]
 }
 
 model Expenses {
@@ -33,15 +35,12 @@ model Expenses {
 
 model Budget {
   id              Int    @id @default(autoincrement())
-  month           Int
-  year            Int
   category        Categories @relation(fields: [categoryId], references: [id])
   categoryId      Int
   monthlyLimit    Int
-  plannedExpenses Json
   author          User @relation(fields: [authorId], references: [id])
   authorId        Int
-  @@unique([authorId, categoryId, month, year])
+  @@unique([authorId, categoryId])
 }
 
 model Categories {
@@ -68,4 +67,24 @@ model PlannedExpenses {
   year            Int
   createdAt       DateTime @default(now())
   @@unique([authorId, categoryId, month, year])
+}
+
+model Income {
+  id          Int    @id @default(autoincrement())
+  amount      Int
+  source      String
+  date        DateTime @default(now())
+  author      User @relation(fields: [authorId], references: [id])
+  authorId    Int
+  createdAt   DateTime @default(now())
+}
+
+model Savings {
+  id          Int    @id @default(autoincrement())
+  amount      Int
+  description String
+  date        DateTime @default(now())
+  author      User @relation(fields: [authorId], references: [id])
+  authorId    Int
+  createdAt   DateTime @default(now())
 }

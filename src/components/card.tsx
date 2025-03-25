@@ -1,3 +1,5 @@
+import { formatCurrency } from "@/utils/formatters/currency";
+
 export default function Card({
     title,
     value
@@ -5,12 +7,6 @@ export default function Card({
     title: string;
     value: number
 }) {
-  const formatCurrency = (amount: number, currency: string = "MXN"): string => {
-    return new Intl.NumberFormat("es-MX", {
-      style: "currency",
-      currency,
-    }).format(amount);
-  };
   return (
     <section className="px-4">
       <div className="container m-auto max-w-2xl">

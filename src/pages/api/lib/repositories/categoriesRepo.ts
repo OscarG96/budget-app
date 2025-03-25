@@ -1,4 +1,4 @@
-import { User } from "@prisma/client";
+import { User, Categories } from "@prisma/client";
 import { prisma } from "../prisma";
 
 export class CategoriesRepo {
@@ -6,6 +6,16 @@ export class CategoriesRepo {
     return prisma.categories.findMany({ 
       where: { authorId: user?.id ?? undefined }, 
       })
+  }
+
+  static async getCategory(id: number) {
+    return prisma.categories.findUnique({ where: { id } })
+  }
+
+  static async createCategory(user: User, categoryName: string ) {
+    return prisma.categories.create({
+      data: { name: categoryName, authorId: user.id }
+    })
   }
 
   static async setDefaultCategories(userId: number) {
