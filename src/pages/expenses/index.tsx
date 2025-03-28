@@ -3,6 +3,7 @@ import { Expenses } from '@prisma/client'
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router';
 import Spinner from '@/components/Spinner';
+import AddExpense from '@/components/AddExpense';
 
 interface ExpensesTable extends Expenses {
   category: {name: string}
@@ -16,6 +17,7 @@ const AllExpensesPage = () => {
   const [sortOrder, setSortOrder] = useState("desc");
   const [expenses, setExpenses] = useState<ExpensesTable[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isFormOpen, setIsFormOpen] = useState(false)
   
     useEffect(() => {
       const fetchExpenses = async () => {
@@ -70,7 +72,7 @@ const AllExpensesPage = () => {
             <button
               className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 w-full sm:w-auto focus:outline-none focus:shadow-outline"
               type="button"
-              onClick={() => router.push('/expenses/add-expense')}
+              onClick={() => setIsFormOpen(true)}
             >
               Add Expense
             </button>
@@ -113,6 +115,17 @@ const AllExpensesPage = () => {
               ))}
             </tbody>
           </table>
+        </div>
+        <div
+          className={`fixed left-0 right-0 top-[64px] bg-white transform transition-transform duration-300 ease-in-out z-50 ${isFormOpen ? "translate-y-0" : "translate-y-full"
+            }`}
+          style={{ height: "calc(100vh - 64px)" }} // Adjust based on navbar height
+        >
+          <div className="flex justify-center h-full">
+            <div className="w-full max-w-lg bg-white p-6 rounded-lg shadow-lg">
+              <AddExpense onClose={() => setIsFormOpen(false)} />
+            </div>
+          </div>
         </div>
       </div>
     </section>

@@ -1,9 +1,13 @@
+import AddExpense from '@/components/AddExpense';
 import Spinner from '@/components/Spinner';
 import { BudgetWithCategory } from '@/types/BudgetWithCategory';
 import { formatCurrency } from '@/utils/formatters/currency';
+import { Description, Dialog, DialogPanel, DialogTitle } from '@headlessui/react';
 import { PlusIcon } from '@heroicons/react/24/solid';
 import { Categories } from '@prisma/client';
+import { X } from 'lucide-react';
 import React, { useEffect, useState } from 'react'
+
 
 const BudgetPage = () => {
   const [budgets, setBudgets] = useState<BudgetWithCategory[]>([])
@@ -11,6 +15,7 @@ const BudgetPage = () => {
   const [customCategoryToggle, setCustomCategoryToggle] = useState(false);
   const [category, setCategory] = useState({ category: { name: "", id: "" }, monthlyLimit: "" });
   const [categories, setCategories] = useState<Partial<Categories>[]>([]);
+  const [isFormOpen, setIsFormOpen] = useState(false)
 
   useEffect(() => {
     const fetchBudgets = async () => {
@@ -68,9 +73,9 @@ const BudgetPage = () => {
     }).then((data) => {
       console.log(data)
     })
-    .catch((error) => {
-      console.log(error)
-    })
+      .catch((error) => {
+        console.log(error)
+      })
 
   }
 
@@ -117,7 +122,7 @@ const BudgetPage = () => {
                       value={category.category.name}
                     >
                       <option key="" value="" disabled selected>
-                          -- Select --
+                        -- Select --
                       </option>
                       {/* <option value="" disabled>Select category</option> */}
                       {categories.map((category, index) => (
@@ -169,6 +174,28 @@ const BudgetPage = () => {
             </li>
 
           </ul>
+        </div>
+        <div className='flex justify-center'>
+          <button
+            className="flex items-center justify-center px-3 py-1.5 bg-white text-black rounded-md hover:bg-gray-100 border border-gray-200 focus:outline-none focus:shadow-outline"
+            type="button"
+            onClick={() => setIsFormOpen(true)}
+          >
+            Add Planned Expense
+          </button>
+        </div>
+
+        {/* Slide-up form */}
+        <div
+          className={`fixed left-0 right-0 top-[64px] bg-white transform transition-transform duration-300 ease-in-out z-50 ${isFormOpen ? "translate-y-0" : "translate-y-full"
+            }`}
+          style={{ height: "calc(100vh - 64px)" }} // Adjust based on navbar height
+        >
+          <div className="flex justify-center h-full">
+            <div className="w-full max-w-lg bg-white p-6 rounded-lg shadow-lg">
+              <AddExpense onClose={() => setIsFormOpen(false)} />
+            </div>
+          </div>
         </div>
       </div >
     </section >

@@ -67,7 +67,7 @@ export default function Dashboard() {
       }
     }
     fetchExpenses()
-  }, [setExpenses, reduceTotalExpenses, formatExpenseCategories, setLoading])
+  }, [])
 
   if (loading) {
     return <Spinner loading={loading} />;

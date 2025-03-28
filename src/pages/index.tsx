@@ -1,7 +1,23 @@
+import Spinner from "@/components/Spinner";
+import { useSession } from "next-auth/react";
 import Link from "next/link";
-import React from "react";
+import { useRouter } from "next/router";
 
-const IndexPage: React.FC = () => {
+import React, { useEffect } from "react";
+
+const IndexPage = () => {
+  const { data: session, status } = useSession();
+  const router = useRouter();
+  useEffect(() => {
+    if (session) {
+      router.push('/dashboard');
+    }
+  }, [session, router]);
+
+  if (status === "loading") {
+    return <Spinner loading={status === "loading"} />;
+  }
+
   return (
     <div className="min-h-screen flex flex-col">
       {/* Hero Section */}
