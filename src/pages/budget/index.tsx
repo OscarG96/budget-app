@@ -192,7 +192,7 @@ const BudgetPage = () => {
           style={{ height: "calc(100vh - 64px)" }} // Adjust based on navbar height
         >
           <div className="flex justify-center h-full">
-            <div className="w-full max-w-lg bg-white p-6 rounded-lg shadow-lg">
+            <div className="w-full max-w-2xl bg-white p-6 rounded-lg">
               <AddExpense onClose={() => setIsFormOpen(false)} />
             </div>
           </div>
