@@ -3,6 +3,8 @@ import { prisma } from "../prisma";
 import { NextApiRequest, NextApiResponse } from "next";
 import { authOptions } from "../../auth/[...nextauth]";
 import bcrypt from "bcryptjs";
+import { DatabaseError } from "../errors/DatabaseError";
+import { Prisma } from "@prisma/client";
 
 export class UsersRepo {
   static async getUserSession(req: NextApiRequest, res: NextApiResponse) {
@@ -18,13 +20,23 @@ export class UsersRepo {
 
   static async createUser(name: string, email: string, password: string) {
     const hashedPassword = await bcrypt.hash(password, 10);
-    return prisma.user.create({
-      data: {
-        name,
-        email,
-        password: hashedPassword,
-      },
-    });
+    try {
+      return await prisma.user.create({
+        data: {
+          name,
+          email,
+          password: hashedPassword,
+        },
+      });
+    } catch (error) {
+      console.log("error here =>", error)
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        if (error.code === 'P2002') {
+          throw new DatabaseError("Email already exists", error);
+        }
+      }
+      throw new DatabaseError("Failed to create user", error)
+    }
   }
 
   static async getUser(email: string) {
