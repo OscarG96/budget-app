@@ -29,7 +29,7 @@ const IndexPage = () => {
           Track expenses, set budgets, and gain financial insights—all in one place.
         </p>
         <div className="mt-6 space-x-4">
-          <Link href="/dashboard" className="bg-green-500 text-white px-6 py-3 rounded-md text-lg hover:bg-green-600">
+          <Link href="/register" className="bg-green-500 text-white px-6 py-3 rounded-md text-lg hover:bg-green-600">
             Get Started
           </Link>
           <Link href="/" className="bg-blue-500 text-white px-6 py-3 rounded-md text-lg hover:bg-blue-600">
