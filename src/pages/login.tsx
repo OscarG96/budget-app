@@ -18,9 +18,8 @@ export default function LoginPage() {
         body: JSON.stringify({ email, password }),
       })
       
-      console.log(response)
       if (response.ok) {
-        router.push('/profile')
+        router.push('/dashboard')
       } else {
         throw response
       }
