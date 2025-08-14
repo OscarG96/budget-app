@@ -42,6 +42,11 @@ const AddExpense = ({ onClose }: { onClose: () => void }) => {
     })
   }
 
+  const handleClose = () => {
+    clearForm()
+    onClose()
+  }
+
   const clearForm = () => {
     setExpense({
       amount: "",
@@ -74,7 +79,8 @@ const AddExpense = ({ onClose }: { onClose: () => void }) => {
     <form onSubmit={submitForm}>
       <h2 className="text-3xl text-center font-semibold mb-6">Add Expense</h2>
       <button
-        onClick={onClose}
+        onClick={handleClose}
+        type='button'
         className="absolute top-4 right-4 text-gray-600 hover:text-gray-900"
       >
         <X size={24} />
