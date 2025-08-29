@@ -10,17 +10,21 @@ export default function LoginPage() {
     const formData = new FormData(event.currentTarget)
     const email = formData.get('email')
     const password = formData.get('password')
- 
-    const response = await fetch('/api/auth/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password }),
-    })
- 
-    if (response.ok) {
-      router.push('/profile')
-    } else {
-      // Handle errors
+
+    try {
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      })
+      
+      if (response.ok) {
+        router.push('/dashboard')
+      } else {
+        throw response
+      }
+    } catch (error) {
+      console.error(error)
     }
   }
  

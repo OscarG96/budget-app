@@ -13,7 +13,6 @@ export const authOptions: AuthOptions = {
         password: { label: 'Password', type: 'password' },
       },
       async authorize(credentials, req) {
-        console.log('credentias', credentials)
         if (!credentials?.username) {
           return null;
         }
@@ -30,6 +29,11 @@ export const authOptions: AuthOptions = {
       },
     }),
   ],
+  callbacks: {
+    async redirect({url, baseUrl}) {
+      return `${baseUrl}/dashboard`
+    }
+  },
   secret: process.env.NEXTAUTH_SECRET,
 };
 

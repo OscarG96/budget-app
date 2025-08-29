@@ -1,7 +1,8 @@
 import dynamic from "next/dynamic";
 import Footer from './footer'
-import Navbar from "./navbar";
+import Navbar from "./Navbar";
 import "react-toastify/dist/ReactToastify.css";
+
 
 const ToastContainer = dynamic(
   () => import("react-toastify").then((mod) => mod.ToastContainer),
@@ -13,8 +14,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     <>
       <ToastContainer />
       <Navbar />
-      <main>{children}</main>
-      {/* <Footer /> */}
+      <main className="container mx-auto">{children}</main>
+      <Footer />
     </>
   )
 }

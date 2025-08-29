@@ -6,10 +6,9 @@ export class UsersService {
     return UsersRepo.getUserSession(req, res)
   }
 
-  static async registerUser(req: NextApiRequest) {
-    const { name, email, password } = req.body;
-    if (!email || !password) {
-      throw new Error("Email and password are required")
+  static async registerUser(name: string, email: string, password: string) {
+    if (!email || !password || !name) {
+      throw new Error("Email, password and name are required")
     }
     return UsersRepo.createUser(name, email, password)
   }

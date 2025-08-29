@@ -3,15 +3,21 @@ import { Expenses } from '@prisma/client'
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router';
 import Spinner from '@/components/Spinner';
+import AddExpense from '@/components/AddExpense';
 
-const AllExpenses = () => {
+interface ExpensesTable extends Expenses {
+  category: {name: string}
+}
+
+const AllExpensesPage = () => {
 
   const router = useRouter()
 
   const [sortKey, setSortKey] = useState("date");
   const [sortOrder, setSortOrder] = useState("desc");
-  const [expenses, setExpenses] = useState<Expenses[]>([]);
+  const [expenses, setExpenses] = useState<ExpensesTable[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isFormOpen, setIsFormOpen] = useState(false)
   
     useEffect(() => {
       const fetchExpenses = async () => {
@@ -19,7 +25,6 @@ const AllExpenses = () => {
           // Fetch expenses from the API
           const res = await fetch('/api/expenses');
           const data = await res.json();
-          console.log(data);
           setExpenses(data.expenses);
           setLoading(false);
         } catch (error) {
@@ -30,7 +35,7 @@ const AllExpenses = () => {
     }, [])
 
   const fields = expenses.length > 0 
-    ? Object.keys(expenses[0]).filter(field => !["authorId", "id"].includes(field)) 
+    ? Object.keys(expenses[0]).filter(field => !["authorId", "id", "categoryId"].includes(field)) 
     : [];
 
   const handleSort = (key: string) => {
@@ -43,61 +48,88 @@ const AllExpenses = () => {
   };
 
   const sortedExpenses = [...expenses].sort((a, b) => {
-    if (sortOrder === "asc") return a[sortKey as keyof Expenses] > b[sortKey as keyof Expenses] ? 1 : -1;
-    return a[sortKey as keyof Expenses] < b[sortKey as keyof Expenses] ? 1 : -1;
+    if (sortOrder === "asc") return a[sortKey as keyof ExpensesTable] > b[sortKey as keyof ExpensesTable] ? 1 : -1;
+    return a[sortKey as keyof ExpensesTable] < b[sortKey as keyof ExpensesTable] ? 1 : -1;
   });
+
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString)
+    return date.toLocaleDateString('es-MX') // Format as MM/DD/YYYY
+  }
   
   if (loading) {
     return <Spinner loading={loading}/>;
   }
 
   return (
-    <section className="bg-blue-50 px-4 py-10">
-      <div className="container m-auto max-w-2xl py-24">
+    <section className="px-4 py-4">
+      <div className="container m-auto max-w-2xl">
         <div className='flex justify-between items-start mb-2'>
           <div>
-            <h2>All Expenses</h2>
+            <h2 className="text-2xl font-semibold">All Expenses</h2>
           </div>
           <div>
             <button
-              className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 w-full focus:outline-none focus:shadow-outline"
+              className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 w-full sm:w-auto focus:outline-none focus:shadow-outline"
               type="button"
-              onClick={() => router.push('/expenses/add-expense')}
+              onClick={() => setIsFormOpen(true)}
             >
               Add Expense
             </button>
           </div>
         </div>
-        <table className="w-full border-collapse">
-          <thead>
-            <tr className="bg-gray-200">
-              {fields.map((key) => (
-                <th
-                  key={key}
-                  className="p-3 text-left cursor-pointer"
-                  onClick={() => handleSort(key)}
-                >
-                  {key.charAt(0).toUpperCase() + key.slice(1)}
-                  <ArrowsUpDownIcon className="inline-block w-4 h-4 ml-1" />
-                </th>
+
+        {/* Table with responsive scrolling */}
+        <div className="overflow-x-auto">
+          <table className="min-w-full border-collapse table-auto">
+            <thead>
+              <tr className="bg-gray-200">
+                {fields.map((key) => (
+                  <th
+                    key={key}
+                    className="p-3 text-left cursor-pointer"
+                    onClick={() => handleSort(key)}
+                  >
+                    {key.charAt(0).toUpperCase() + key.slice(1)}
+                    <ArrowsUpDownIcon className="inline-block w-4 h-4 ml-1" />
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {sortedExpenses.map((expense, index) => (
+                <tr key={index} className="border-b hover:bg-gray-100 transition-colors">
+                  {fields.map((key) => (
+                    <td key={key} className="p-3 text-sm sm:text-base">
+                    {key === "amount"
+                      ? `$${(expense[key as keyof ExpensesTable] as number).toFixed(2)}`
+                      : key === "date"
+                      ? formatDate(String(expense[key as keyof ExpensesTable])) // Format the date
+                      : key === "category"
+                      ? expense.category.name
+                      : String(expense[key as keyof ExpensesTable])
+                      }
+                  </td>
+                  ))}
+                </tr>
               ))}
-            </tr>
-          </thead>
-          <tbody>
-          {sortedExpenses.map((expense, index) => (
-            <tr key={index} className="border-b hover:bg-gray-100 transition-colors">
-              {fields.map((key) => (
-                <td key={key} className="p-3">
-                  {key === "amount" ? `$${(expense[key as keyof Expenses] as number).toFixed(2)}` : String(expense[key as keyof Expenses])}
-                </td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-        </table>
+            </tbody>
+          </table>
+        </div>
+        <div
+          className={`fixed left-0 right-0 top-[64px] bg-white transform transition-transform duration-300 ease-in-out z-50 ${isFormOpen ? "translate-y-0" : "translate-y-full"
+            }`}
+          style={{ height: "calc(100vh - 64px)" }} // Adjust based on navbar height
+        >
+          <div className="flex justify-center h-full">
+            <div className="w-full max-w-2xl bg-white p-6 rounded-lg">
+              <AddExpense onClose={() => setIsFormOpen(false)} />
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   )
 }
 
-export default AllExpenses
+export default AllExpensesPage

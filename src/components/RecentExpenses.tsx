@@ -2,35 +2,20 @@ import React, { useEffect, useState } from 'react'
 import Spinner from './Spinner';
 import { Expenses } from '@prisma/client';
 
-const RecentExpenses = () => {
-  const [loading, setLoading] = useState(true);
+interface ExpensesTable extends Expenses {
+  category: {name: string}
+}
 
-  const [expenses, setExpenses] = useState<Expenses[]>([]);
+type ExpensesListProps = {
+  expenses: ExpensesTable[];
+};
 
-  useEffect(() => {
-    const fetchExpenses = async () => {
-      try {
-        // Fetch expenses from the API
-        const res = await fetch('/api/expenses?limit=5');
-        const data = await res.json();
-        console.log(data);
-        setExpenses(data.expenses);
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setLoading(false);
-      }
-    }
-    fetchExpenses()
-  }, [])
+
+const RecentExpenses: React.FC<ExpensesListProps> = ({expenses}) => {
   
-  if (loading) {
-    return <Spinner loading={loading}/>;
-  }
-
   return (
-    <section className="bg-blue-50 px-4 py-10">
-      <div className="container m-auto max-w-2xl py-24">
+    <section className="px-4 py-1">
+      <div className="container m-auto max-w-2xl">
         <div className='bg-white px-6 py-8 mb-4 shadow-md rounded-md border m-4 md:m-0"'>
           <h2 className="text-3xl text-center font-semibold mb-6">Recent Expenses</h2>
           <ul role="list" className="space-y-4">
@@ -39,7 +24,7 @@ const RecentExpenses = () => {
                 <div className="flex justify-between items-start">
                   <div>
                     <h3 className="text-lg font-semibold text-gray-800">{expense.description}</h3>
-                    <p className="text-sm text-gray-600">{expense.category}</p>
+                    <p className="text-sm text-gray-600">{expense.category.name}</p>
                   </div>
                   <div className="text-right">
                     <p className="text-lg font-bold text-gray-800">${expense.amount.toFixed(2)}</p>
@@ -51,8 +36,6 @@ const RecentExpenses = () => {
           </ul>
         </div>
       </div>
-
-
     </section>
   )
 }

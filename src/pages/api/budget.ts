@@ -1,15 +1,27 @@
 import type { NextApiRequest, NextApiResponse } from "next";
+import { BudgetService } from "./lib/services/budgetService";
+import { Session } from "next-auth";
+import { UsersService } from "./lib/services/usersService";
 type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE';
-type Handler = (req: NextApiRequest, res: NextApiResponse) => Promise<void>;
+type Handler = (req: AuthenticatedRequest, res: NextApiResponse) => Promise<void>;
+
+interface AuthenticatedRequest extends NextApiRequest {
+  session: Session;
+  user?: any;
+}
 
 const handlers: Record<HttpMethod, Handler> = {
-    GET: async (req: NextApiRequest, res: NextApiResponse) => {
-        const data = await getRequest();
-        res.status(200).json({message: "GET request handled", data})
+    GET: async (req: AuthenticatedRequest, res: NextApiResponse) => {
+        const budgets = await BudgetService.getUserBudgets(req.user);
+        console.log("budgets", budgets)
+        res.status(200).send(budgets)
     }, 
-    POST: async (req: NextApiRequest, res: NextApiResponse) => {
+    POST: async (req: AuthenticatedRequest, res: NextApiResponse) => {
         const data = req.body;
-        res.status(201).json({ message: "POST request handled", data });
+        console.log("data", data)
+        const newBudget = await BudgetService.createBudget(req.user, data)
+        console.log("newBudget", newBudget)
+        res.status(201).send(newBudget);
     },
     PUT: async (req, res) => {
         res.status(200).json({ message: "PUT request handled" });
@@ -19,8 +31,9 @@ const handlers: Record<HttpMethod, Handler> = {
     },
 }
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-    const method = req.method as HttpMethod;
+export default async function handler(req: AuthenticatedRequest, res: NextApiResponse) {
+  req.user = await UsersService.getUserSession(req, res);  
+  const method = req.method as HttpMethod;
     if (method && handlers[method] ) {
       await handlers[method](req, res);
     } else {
@@ -28,7 +41,3 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       res.status(405).end(`Method ${method} Not Allowed`);
     }
   }
-
-const getRequest = async () => {
-    return Promise.resolve("OK")
-}
