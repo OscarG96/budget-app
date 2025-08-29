@@ -73,6 +73,8 @@ model Income {
   id          Int    @id @default(autoincrement())
   amount      Int
   source      String
+  description String
+  category    String
   date        DateTime @default(now())
   author      User @relation(fields: [authorId], references: [id])
   authorId    Int

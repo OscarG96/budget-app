@@ -1,8 +1,7 @@
 import dynamic from "next/dynamic";
 import Footer from './footer'
-
-import "react-toastify/dist/ReactToastify.css";
 import Navbar from "./Navbar";
+import "react-toastify/dist/ReactToastify.css";
 
 
 const ToastContainer = dynamic(
