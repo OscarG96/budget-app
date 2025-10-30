@@ -29,7 +29,6 @@ export class UsersRepo {
         },
       });
     } catch (error) {
-      console.log("error here =>", error)
       if (error instanceof Prisma.PrismaClientKnownRequestError) {
         if (error.code === 'P2002') {
           throw new DatabaseError("Email already exists", error);

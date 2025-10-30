@@ -1,5 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { UsersRepo } from "../repositories/usersRepo";
+import { generateToken } from "../utils/auth";
+
 
 export class UsersService {
   static async getUserSession(req: NextApiRequest, res: NextApiResponse) {
@@ -10,7 +12,9 @@ export class UsersService {
     if (!email || !password || !name) {
       throw new Error("Email, password and name are required")
     }
-    return UsersRepo.createUser(name, email, password)
+    const user = await UsersRepo.createUser(name, email, password)
+    const token = generateToken(user);
+    return Object.assign({}, user, token)
   }
 
   static async getUser(email: string) {
