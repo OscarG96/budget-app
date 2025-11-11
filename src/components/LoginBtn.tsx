@@ -56,15 +56,11 @@ export default function LoginBtn() {
   return (
     <>
       <small>
-        {/* Sign In Button styled as an anchor link */}
-        <button
-          className="text-blue-500 hover:text-blue-700 focus:outline-none"
-          onClick={() => signIn()}
-        >
+        <Link href="/auth/signin">
           Sign in
-        </button>{" "}
+        </Link>
         <br />
-        <Link href="/register">
+        <Link href="/auth/register">
           Register
         </Link>
       </small>
