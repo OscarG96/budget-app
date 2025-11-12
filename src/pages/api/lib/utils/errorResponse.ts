@@ -2,6 +2,7 @@ import { NextApiResponse } from "next";
 import { DatabaseError } from "../errors/DatabaseError";
 
 export function handleApiError(err: unknown, res: NextApiResponse) {
+  console.log(err)
   if (err instanceof DatabaseError) {
     return res.status(409).json({ message: err.message });
   }

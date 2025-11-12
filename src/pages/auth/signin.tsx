@@ -1,6 +1,7 @@
 import React from 'react'
 import { useRouter } from 'next/router';
 import { useState } from 'react';
+import { signIn } from 'next-auth/react';
 
 export default function Signin() {
   const [email, setEmail] = useState('');
@@ -13,20 +14,20 @@ export default function Signin() {
     e.preventDefault();
 
     try {
-      const response = await fetch('/api/signin', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
+      const result = await signIn('credentials', {
+        redirect: false,
+        username: email, 
+        password
       });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || "Registration failed");
+      console.log(result)
+      if (result?.error) {
+        setError("Invalid email or password");
+      } else {
+        router.push("/dashboard");
       }
     } catch (error) {
-      // setError((error as Error).message);
-      // setSuccess('');
+      setError((error as Error).message);
+      setSuccess('');
     }
   };
   return (
@@ -92,6 +93,10 @@ export default function Signin() {
               </button>
             </div>
           </form>
+          <small>
+            {error && <p style={{ color: 'red' }}>{error}</p>}
+            {success && <p style={{ color: 'green' }}>{success}</p>}
+          </small>
 
           <p className="mt-10 text-center text-sm/6 text-gray-500">
             Not a member?{' '}
