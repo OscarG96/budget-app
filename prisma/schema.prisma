@@ -19,6 +19,8 @@ model User {
   plannedExpenses PlannedExpenses[]
   incomes   Income[]
   savings   Savings[]
+  
+  @@map("users")
 }
 
 model Expenses {
@@ -31,6 +33,8 @@ model Expenses {
   author          User @relation(fields: [authorId], references: [id])
   authorId        Int
   createdAt       DateTime @default(now())
+  
+  @@map("expenses")
 }
 
 model Budget {
@@ -40,7 +44,9 @@ model Budget {
   monthlyLimit    Int
   author          User @relation(fields: [authorId], references: [id])
   authorId        Int
+  
   @@unique([authorId, categoryId])
+  @@map("budgets")
 }
 
 model Categories {
@@ -52,6 +58,8 @@ model Categories {
   budget          Budget[]
   expenses        Expenses[]
   plannedExpenses PlannedExpenses[]
+
+  @@map("categories")
 }
 
 model PlannedExpenses {
@@ -66,7 +74,9 @@ model PlannedExpenses {
   month           Int
   year            Int
   createdAt       DateTime @default(now())
+  
   @@unique([authorId, categoryId, month, year])
+  @@map("panned_expenses")
 }
 
 model Income {
@@ -79,6 +89,8 @@ model Income {
   author      User @relation(fields: [authorId], references: [id])
   authorId    Int
   createdAt   DateTime @default(now())
+
+  @@map("income")
 }
 
 model Savings {
@@ -89,4 +101,6 @@ model Savings {
   author      User @relation(fields: [authorId], references: [id])
   authorId    Int
   createdAt   DateTime @default(now())
+
+  @@map("savings")
 }
