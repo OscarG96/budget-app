@@ -14,4 +14,13 @@ export class BudgetRepo {
       data: { ...budget, authorId: user.id}
     })
   }
+
+  static async getBudgetWithExpenses(user: User) {
+    return prisma.budget.findMany({
+      where: {authorId: user?.id ?? undefined},
+      include: { category: {
+        include: { expenses: true }
+      } }
+    })
+  }
 }

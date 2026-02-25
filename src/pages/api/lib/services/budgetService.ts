@@ -1,10 +1,18 @@
-import type { Budget, User } from "@prisma/client"
+import type { User } from "@prisma/client"
 import { BudgetRepo } from "../repositories/budgetRepo"
 import { CategoriesRepo } from "../repositories/categoriesRepo"
-import { BudgetWithCategory } from "@/types/BudgetWithCategory"
+import { BudgetWithCategory } from "@/types/types"
+import { BudgetQuerySchema } from "../../schemas/schemas";
+import { z } from "zod";
+
+type GetBudgetsQuery = z.infer<typeof BudgetQuerySchema>;
 
 export class BudgetService {
-  static async getUserBudgets(user: User) {
+  static async getUserBudgets(user: User, query: GetBudgetsQuery) {
+    const { month, year, includeExpenses } = query;
+    if (includeExpenses) {
+      return BudgetRepo.getBudgetWithExpenses(user)  
+    }
     return BudgetRepo.getBudgets(user)
   }
 

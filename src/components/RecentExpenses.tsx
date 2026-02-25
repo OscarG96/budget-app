@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import Spinner from './Spinner';
-import { Expenses } from '@prisma/client';
+import { Expenses } from '@/types/types'; 
 
 interface ExpensesTable extends Expenses {
   category: {name: string}

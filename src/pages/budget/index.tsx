@@ -1,10 +1,12 @@
 import AddExpense from '@/components/AddExpense';
 import Spinner from '@/components/Spinner';
-import { BudgetWithCategory } from '@/types/BudgetWithCategory';
+import { BudgetWithCategory } from '@/types/types';
+import { createBudget, fetchBudgets } from '@/utils/api/budgetApi';
+import { fetchCategories } from '@/utils/api/categoriesApi';
 import { formatCurrency } from '@/utils/formatters/currency';
 import { Description, Dialog, DialogPanel, DialogTitle } from '@headlessui/react';
 import { PlusIcon } from '@heroicons/react/24/solid';
-import { Categories } from '@prisma/client';
+import { Category } from '@/types/types'; 
 import { X } from 'lucide-react';
 import React, { useEffect, useState } from 'react'
 
@@ -14,69 +16,28 @@ const BudgetPage = () => {
   const [loading, setLoading] = useState(true);
   const [customCategoryToggle, setCustomCategoryToggle] = useState(false);
   const [category, setCategory] = useState({ category: { name: "", id: "" }, monthlyLimit: "" });
-  const [categories, setCategories] = useState<Partial<Categories>[]>([]);
+  const [categories, setCategories] = useState<Partial<Category>[]>([]);
   const [isFormOpen, setIsFormOpen] = useState(false)
 
+  
   useEffect(() => {
-    const fetchBudgets = async () => {
-      fetch('/api/budget')
-        .then((res) => res.json())
-        .then((budgets) => {
-          setBudgets(budgets)
-        }).catch((error) => {
-          console.log(error)
-        }).finally(() => {
-          setLoading(false)
-        })
-    }
-    fetchBudgets()
+    fetchBudgets().then(setBudgets).catch(console.error).finally(() => setLoading(false))
   }, [])
 
   useEffect(() => {
-    const fetchCategories = async () => {
-      fetch('/api/categories')
-        .then((res) => res.json())
-        .then((categories) => {
-          setCategories([...categories, { name: "Other" }])
-          // setCategory({ category: {name: categories[0].name, id: categories[0].id}, monthlyLimit: "" })
-        }).catch((error) => {
-          console.log(error)
-        })
-    }
-    fetchCategories()
+    fetchCategories().then(setCategories).catch(console.error);
   }, [])
 
   const submitForm = (e: React.FormEvent) => {
     e.preventDefault()
 
-    const parsedBudget = {
+    const budget = {
       category: { name: category.category.name, id: Number(category.category.id) },
       monthlyLimit: parseFloat(category.monthlyLimit),
     }
-    console.log(parsedBudget)
-    // return
-    fetch('api/budget', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(parsedBudget)
-    }).then((res) => {
-      if (res.ok) {
-        console.log(res)
-        // setBudgets([...budgets, { ...parsedBudget, category: { name: newBudgetCategory.name } }])
-        setCategory({ category: { name: "", id: "" }, monthlyLimit: "" })
-      } else {
-
-      }
-      return res.json()
-    }).then((data) => {
-      console.log(data)
-    })
-      .catch((error) => {
-        console.log(error)
-      })
-
+    createBudget(budget).then(() => {
+      setCategory({ category: { name: "", id: "" }, monthlyLimit: "" })
+    }).catch(console.error);
   }
 
   if (loading) {

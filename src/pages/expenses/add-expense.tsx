@@ -1,5 +1,5 @@
 import Spinner from '@/components/Spinner';
-import type { Categories, Expenses } from '@prisma/client';
+import type { Category } from '@/types/types'; 
 import React, { useEffect, useState } from 'react'
 
 import { toast } from "react-toastify"
@@ -12,7 +12,7 @@ const AddExpense = () => {
     categoryId: "", 
     date: new Date().toISOString().split("T")[0]
   })
-  const [categories, setCategories] = useState<Categories[]>([])
+  const [categories, setCategories] = useState<Category[]>([])
 
   const submitForm = (e: React.FormEvent) => {
     e.preventDefault()

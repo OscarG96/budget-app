@@ -2,8 +2,10 @@ import RecentExpenses from "@/components/RecentExpenses";
 import Card from "@/components/Card";
 import { BarChart, PieChart, Bar, Pie, Cell, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
 import { useEffect, useState } from "react";
-import { Expenses } from "@prisma/client";
+import { Expenses } from "@/types/types";
 import Spinner from "@/components/Spinner";
+import { fetchBudgetswithExpenses } from "@/utils/api/budgetApi";
+import { BudgetTable } from "@/components/BudgetTable";
 
 interface ExpensesTable extends Expenses {
   category: {name: string}
@@ -49,6 +51,10 @@ export default function Dashboard() {
   }
 
   useEffect(() => {
+    fetchBudgetswithExpenses().then(console.log).catch(console.error);
+  })
+
+  useEffect(() => {
     const fetchExpenses = async () => {
       let currentDate = new Date()
       let currentMonth = currentDate.getMonth() + 1
@@ -77,10 +83,10 @@ export default function Dashboard() {
     <>
       {/* metrics */}
       <div className="grid grid-cols-1 sm:grid-cols-4">
-        <Card title={"Total Income:"} value={7000}></Card>
-        <Card title={"Total Expenses:"} value={totalExpenses}></Card>
-        <Card title={"Net Balance:"} value={3000}></Card>
-        <Card title={"Savings:"} value={1000}></Card>
+        {/* <Card title={"Total Income:"} value={7000}></Card> */}
+        <Card title={"Total Spent:"} value={totalExpenses}></Card>
+        {/* <Card title={"Net Balance:"} value={3000}></Card>
+        <Card title={"Savings:"} value={1000}></Card> */}
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
@@ -88,7 +94,10 @@ export default function Dashboard() {
           <RecentExpenses expenses={expenses} />
         </div>
         <div>
-          <section className="px-4 py-1">
+          {/* <BudgetTable budget /> */}
+        </div>
+        <div>
+          {/* <section className="px-4 py-1">
             <div className="container m-auto max-w-2xl">
               <div className='bg-white px-6 py-8 mb-4 shadow-md rounded-md border m-4 md:m-0"'>
                 <h2 className="text-3xl text-center font-semibold mb-6">Top Categories</h2>
@@ -102,8 +111,8 @@ export default function Dashboard() {
                 </ResponsiveContainer>
               </div>
             </div>
-          </section>
-          <section className="px-4 py-1">
+          </section> */}
+          {/* <section className="px-4 py-1">
             <div className="container m-auto max-w-2xl">
               <div className='bg-white px-6 py-8 mb-4 shadow-md rounded-md border m-4 md:m-0"'>
                 <h2 className="text-3xl text-center font-semibold mb-6">Income vs. Expenses</h2>
@@ -118,7 +127,7 @@ export default function Dashboard() {
                 </ResponsiveContainer>
               </div>
             </div>
-          </section>
+          </section> */}
         </div>
       </div>
     </>
