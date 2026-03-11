@@ -1,4 +1,4 @@
-import { BudgetWithCategory } from "@/types/types";
+import { BudgetWithCategory, BudgetWithCategoryAndExpenses } from "@/types/types";
 import { http } from "../http/http";
 import { Budget } from "@prisma/client";
 
@@ -13,4 +13,4 @@ export const createBudget = (budget: Partial<Budget>) =>
   });
 
 export const fetchBudgetswithExpenses = () => 
-  http<Budget>('/api/budget?includeExpenses=true')
+  http<BudgetWithCategoryAndExpenses[]>('/api/budget?includeExpenses=true')

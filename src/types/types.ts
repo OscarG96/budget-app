@@ -32,11 +32,10 @@ export type BudgetWithCategoryAndExpenses = {
   category: {
     id: number;
     name: string;
-    expenses: {
-      id: number;
-      amount: number;
-      description: string;
-      date: string; // ISO
-    }[];
+    expenses: Expenses[];
   };
 };
+
+export type ExpenseWithCategory = Expenses & {
+  category: Category
+}

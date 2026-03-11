@@ -1,9 +1,10 @@
 import { ArrowsUpDownIcon } from '@heroicons/react/24/outline'
-import { Expenses } from '@/types/types'; 
+import { Expenses, ExpenseWithCategory } from '@/types/types'; 
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router';
 import Spinner from '@/components/Spinner';
 import AddExpense from '@/components/AddExpense';
+import { fetchExpenses } from '@/utils/api/expensesApi';
 
 interface ExpensesTable extends Expenses {
   category: {name: string}
@@ -15,24 +16,16 @@ const AllExpensesPage = () => {
 
   const [sortKey, setSortKey] = useState("date");
   const [sortOrder, setSortOrder] = useState("desc");
-  const [expenses, setExpenses] = useState<ExpensesTable[]>([]);
+  const [expenses, setExpenses] = useState<ExpenseWithCategory[]>([]);
   const [loading, setLoading] = useState(true);
   const [isFormOpen, setIsFormOpen] = useState(false)
   
-    useEffect(() => {
-      const fetchExpenses = async () => {
-        try {
-          // Fetch expenses from the API
-          const res = await fetch('/api/expenses');
-          const data = await res.json();
-          setExpenses(data.expenses);
-          setLoading(false);
-        } catch (error) {
-          console.error(error);
-        }
-      }
-      fetchExpenses()
-    }, [])
+  let currentDate = new Date()
+  let currentMonth = currentDate.getMonth() + 1
+  let currentYear = currentDate.getFullYear()
+  useEffect(() => {
+    fetchExpenses(currentMonth, currentYear).then(setExpenses).catch(console.error).finally(() => setLoading(false))
+  }, []);
 
   const fields = expenses.length > 0 
     ? Object.keys(expenses[0]).filter(field => !["authorId", "id", "categoryId"].includes(field)) 

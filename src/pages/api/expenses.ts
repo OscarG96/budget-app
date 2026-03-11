@@ -17,7 +17,7 @@ const handlers: Record<HttpMethod, Handler> = {
     if (req.user) {
       const query = req.query;
       const expenses = await ExpensesService.getExpenses(req.user, query)
-      res.status(200).json({ message: "GET request handled", expenses });
+      res.status(200).send(expenses);
     } else {
       res.status(400).json({ message: "User not found" });
     }
