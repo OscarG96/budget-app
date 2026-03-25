@@ -1,6 +1,6 @@
-import { BudgetWithCategory, BudgetWithCategoryAndExpenses } from "@/types/types";
+import { Budget, BudgetWithCategory, BudgetWithCategoryAndExpenses } from "@/types/types";
 import { http } from "../http/http";
-import { Budget } from "@prisma/client";
+
 
 
 export const fetchBudgets = () =>

@@ -77,7 +77,7 @@ export default function Navbar() {
             exit="exit"
             variants={sidebarVariants}
             transition={{ duration: 0.3, ease: "easeInOut" }}
-            className="fixed top-0 right-0 h-full w-64 bg-gray-800 shadow-lg p-6 flex flex-col"
+            className="fixed top-0 right-0 h-full w-64 bg-gray-800 shadow-lg p-6 flex flex-col z-10"
           >
             {/* Close Button */}
             <button onClick={() => setIsOpen(false)} className="self-end text-white">

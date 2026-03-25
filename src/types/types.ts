@@ -39,3 +39,10 @@ export type BudgetWithCategoryAndExpenses = {
 export type ExpenseWithCategory = Expenses & {
   category: Category
 }
+
+export type User = {
+  name: string;
+  lastName: string;
+  email: string;
+  password: string;
+}

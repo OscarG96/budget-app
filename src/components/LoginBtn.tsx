@@ -64,7 +64,7 @@ export default function LoginBtn() {
           Sign in
         </button>{" "}
         <br />
-        <Link href="/register">
+        <Link href="/login/signUp">
           Register
         </Link>
       </small>
