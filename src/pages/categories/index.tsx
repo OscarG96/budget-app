@@ -25,7 +25,10 @@ const BudgetPage = () => {
   }, [])
 
   useEffect(() => {
-    fetchCategories().then(setCategories).catch(console.error);
+    fetchCategories().then((fetchedCategories) => {
+      const customCategory: Partial<Category> = { id: 0, name: 'Other' };
+      setCategories([...fetchedCategories, customCategory]);
+    }).catch(console.error);
   }, [])
 
   const submitForm = (e: React.FormEvent) => {
@@ -48,7 +51,7 @@ const BudgetPage = () => {
     <section className="px-4 py-1">
       <div className="container m-auto max-w-2xl">
         <div className='bg-white px-2 py-2 mb-4 shadow-md border m-4 md:m-0"'>
-          <h2 className="text-3xl text-center font-semibold mb-6">Budget</h2>
+          <h2 className="text-3xl text-center font-semibold mb-6">Categories</h2>
           <ul role="list" className="divide-y divide-gray-100">
             {budgets.map((budget, index) => (
               <li key={index} className="bg-white p-4">
@@ -137,13 +140,13 @@ const BudgetPage = () => {
           </ul>
         </div>
         <div className='flex justify-center'>
-          <button
+          {/* <button
             className="flex items-center justify-center px-3 py-1.5 bg-white text-black rounded-md hover:bg-gray-100 border border-gray-200 focus:outline-none focus:shadow-outline"
             type="button"
             onClick={() => setIsFormOpen(true)}
           >
             Add Planned Expense
-          </button>
+          </button> */}
         </div>
 
         {/* Slide-up form */}

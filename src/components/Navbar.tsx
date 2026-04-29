@@ -12,7 +12,7 @@ export default function Navbar() {
     { name: "Home", path: "/dashboard" },
     { name: "Expenses", path: "/expenses" },
     { name: "Income", path: "/income" },
-    { name: "Budget", path: "/budget" },
+    { name: "Categories", path: "/categories" },
   ];
 
   // Framer Motion animation variants (Slide from Right)

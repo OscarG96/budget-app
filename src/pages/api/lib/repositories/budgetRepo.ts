@@ -15,11 +15,19 @@ export class BudgetRepo {
     })
   }
 
-  static async getBudgetWithExpenses(user: User) {
+  static async getBudgetWithExpenses(user: User, startDate: Date, endDate: Date) {
     return prisma.budget.findMany({
       where: {authorId: user?.id ?? undefined},
       include: { category: {
-        include: { expenses: true }
+        include: { 
+          expenses: {
+            where: {
+              date: {
+                gte: startDate,
+                lte: endDate
+              }
+            }
+        }}
       } }
     })
   }

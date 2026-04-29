@@ -16,18 +16,18 @@ export default function Dashboard() {
   const [expenses, setExpenses] = useState<ExpenseWithCategory[]>([]);
   const [budgetWithCategoryAndExpenses, setbudgetWithCategoryAndExpenses] = useState<BudgetWithCategoryAndExpenses[]>([]);
   const [loading, setLoading] = useState(true);
+  let currentDate = new Date()
+  let currentMonth = currentDate.getMonth() + 1
+  let currentYear = currentDate.getFullYear()
 
   const total = useMemo(() => {
     return expenses.reduce((sum, e) => sum + e.amount, 0);
   }, [expenses]);
 
   useEffect(() => {
-    fetchBudgetswithExpenses().then(setbudgetWithCategoryAndExpenses).catch(console.error);
+    fetchBudgetswithExpenses(currentMonth, currentYear).then(setbudgetWithCategoryAndExpenses).catch(console.error);
   }, []);
 
-  let currentDate = new Date()
-  let currentMonth = currentDate.getMonth() + 1
-  let currentYear = currentDate.getFullYear()
   useEffect(() => {
     fetchExpenses(currentMonth, currentYear).then(setExpenses).catch(console.error).finally(() => setLoading(false))
   }, []);

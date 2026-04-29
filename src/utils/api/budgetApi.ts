@@ -12,5 +12,5 @@ export const createBudget = (budget: Partial<Budget>) =>
     body: budget
   });
 
-export const fetchBudgetswithExpenses = () => 
-  http<BudgetWithCategoryAndExpenses[]>('/api/budget?includeExpenses=true')
+export const fetchBudgetswithExpenses = (month: number, year: number) => 
+  http<BudgetWithCategoryAndExpenses[]>(`/api/budget?includeExpenses=true&month=${month}&year=${year}`)
