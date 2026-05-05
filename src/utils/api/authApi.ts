@@ -2,7 +2,7 @@ import { User } from "@/types/types";
 import { http } from "../http/http";
 
 export const registerUser = (user: User) => 
-  http('/api/register', {
+  http<User>('/api/auth', {
     method: 'POST',
     body: user
   })

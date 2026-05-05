@@ -16,3 +16,9 @@ export const BudgetQuerySchema = z.object({
     .optional()
     .transform(v => v === 'true'),
 });
+
+export const UserRegisterSchema = z.object({
+  email: z.string(),
+  name: z.string(),
+  password: z.string(),
+});

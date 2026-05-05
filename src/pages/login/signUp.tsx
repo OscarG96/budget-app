@@ -113,14 +113,6 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
       event.preventDefault();
       return;
     }
-    const data = new FormData(event.currentTarget);
-
-    // const user = {
-    //   name: data.get('name'),
-    //   lastName: data.get('lastName'),
-    //   email: data.get('email'),
-    //   password: data.get('password'),
-    // }
 
     const user = Object.fromEntries(
       new FormData(event.currentTarget)
@@ -131,27 +123,12 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
       password: string;
     };
     try {
-      // const response = await fetch('/api/register', {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify(user),
-      // });
-
-      const response  = registerUser(user).then(response => response)
-      console.log(response);
-      
-      // const data = await response.json();
-
-      // if (!response.ok) {
-      //   throw new Error(data.message || "Registration failed");
-      // }
-      return
-      // const result = await signIn("credentials", { username: user.email, password: user.password, redirect: false });
-
-      // if (result?.error) {
-      //   throw new Error(result.error);
-      // }
-      // router.push("/dashboard");
+      await registerUser(user).then(response => response)
+      const result = await signIn("credentials", { username: user.email, password: user.password, redirect: false });
+      if (result?.error) {
+        throw new Error(result.error);
+      }
+      router.push("/dashboard");
     } catch (error) {
       console.error(error)
       // setError((error as Error).message);

@@ -1,5 +1,3 @@
-// http.ts
-
 export type HttpMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
 
 export interface HttpError extends Error {
