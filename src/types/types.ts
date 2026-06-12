@@ -1,8 +1,8 @@
-export type Expenses = {
+export type Expense = {
   amount: number;
   description: string;
   categoryId: number;
-  date: Date;
+  date: string;
   id: number;
   authorId: number;
   createdAt: Date;
@@ -32,11 +32,11 @@ export type BudgetWithCategoryAndExpenses = {
   category: {
     id: number;
     name: string;
-    expenses: Expenses[];
+    expenses: Expense[];
   };
 };
 
-export type ExpenseWithCategory = Expenses & {
+export type ExpenseWithCategory = Expense & {
   category: Category
 }
 

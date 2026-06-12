@@ -1,5 +1,7 @@
 import Spinner from '@/components/Spinner';
 import type { Category } from '@/types/types'; 
+import { fetchCategories } from '@/utils/api/categoriesApi';
+import { createExpense } from '@/utils/api/expensesApi';
 import { X } from 'lucide-react';
 import React, { useEffect, useState } from 'react'
 
@@ -10,7 +12,7 @@ const AddExpense = ({ onClose }: { onClose: () => void }) => {
   const [expense, setExpense] = useState({
     amount: "",
     description: "",
-    categoryId: "",
+    categoryId: "0",
     date: new Date().toISOString().split("T")[0]
   })
   const [categories, setCategories] = useState<Category[]>([])
@@ -20,25 +22,16 @@ const AddExpense = ({ onClose }: { onClose: () => void }) => {
     const parsedExpense = {
       ...expense,
       amount: parseFloat(expense.amount),
-      categoryId: parseInt(expense.categoryId)
+      categoryId: parseInt(expense.categoryId),
+      // date: expense.date.toString()
     }
     console.log(parsedExpense)
-
-    fetch('/api/expenses', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(parsedExpense)
-    }).then((res) => {
-      if (res.ok) {
-        toast.success("Expense added successfully")
-        clearForm()
-      } else {
-        toast.error("Failed to add expense")
-      }
-    }).catch((error) => {
-      console.log(error)
+    createExpense(parsedExpense).then(() => {
+      toast.success("Expense added successfully")
+      clearForm()
+    }).catch((err) => {
+      toast.error("Failed to add expense")
+      console.log(err)
     })
   }
 
@@ -51,25 +44,18 @@ const AddExpense = ({ onClose }: { onClose: () => void }) => {
     setExpense({
       amount: "",
       description: "",
-      categoryId: "",
+      categoryId: "0",
       date: new Date().toISOString().split("T")[0]
     })
   }
 
   useEffect(() => {
-    const fetchCategories = async () => {
-      fetch('/api/categories')
-        .then((res) => res.json())
-        .then((categories) => {
-          setCategories(categories)
-          setExpense({ ...expense, categoryId: categories[0].id })
-        }).catch((error) => {
-          console.log(error)
-        }).finally(() => {
-          setLoading(false)
-        })
-    }
     fetchCategories()
+      .then(categories => setCategories(categories))
+      .catch(err => {
+        console.log(err)
+      })
+      .finally(() => setLoading(false))
   }, [setCategories, setExpense])
 
   if (loading) {
@@ -126,11 +112,15 @@ const AddExpense = ({ onClose }: { onClose: () => void }) => {
           required
           value={expense?.categoryId}
           onChange={(e) => setExpense({ ...expense, categoryId: e.target.value })}>
+          <option disabled key="0" value="0">
+            -- Select --
+          </option>
           {categories.map((category) => (
             <option key={category.id} value={category.id}>
               {category.name}
             </option>
           ))}
+          {/* default option */}
         </select>
       </div>
       <div className='mb-4'>

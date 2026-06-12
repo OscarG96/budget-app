@@ -5,12 +5,14 @@ export const BudgetQuerySchema = z.object({
     .string()
     .regex(/^\d+$/)
     .transform((val) => parseInt(val, 10))
-    .refine((m) => m >= 1 && m <= 12, "Invalid month"),
+    .refine((m) => m >= 1 && m <= 12, "Invalid month")
+    .optional(),
   year: z
     .string()
     .regex(/^\d+$/)
     .transform((val) => parseInt(val, 10))
-    .refine((y) => y >= 2000 && y <= 2100, "Invalid year"),
+    .refine((y) => y >= 2000 && y <= 2100, "Invalid year")
+    .optional(),
   includeExpenses: z
     .enum(['true', 'false'])
     .optional()

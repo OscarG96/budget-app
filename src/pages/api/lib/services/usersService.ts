@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { UsersRepo } from "../repositories/usersRepo";
+import { CategoriesService } from "./categoriesService";
 
 export class UsersService {
   static async getUserSession(req: NextApiRequest, res: NextApiResponse) {
@@ -7,10 +8,16 @@ export class UsersService {
   }
 
   static async registerUser(name: string, email: string, password: string) {
-    if (!email || !password || !name) {
-      throw new Error("Email, password and name are required")
+    try {
+      if (!email || !password || !name) {
+        throw new Error("Email, password and name are required")
+      }
+      const user = await UsersRepo.createUser(name, email, password)
+      await CategoriesService.setDefaultCategories(user.id);
+      return user;
+    } catch (error) {
+      return error;
     }
-    return UsersRepo.createUser(name, email, password)
   }
 
   static async getUser(email: string) {

@@ -10,11 +10,9 @@ type GetBudgetsQuery = z.infer<typeof BudgetQuerySchema>;
 export class BudgetService {
   static async getUserBudgets(user: User, query: GetBudgetsQuery) {
     const { month, year, includeExpenses } = query;
-    const startDate = new Date(year, month - 1, 1, 0, 0, 0, 0);
-    const endDate = new Date(year, month, 0, 23, 59, 59, 999);
-    console.log("startDate", startDate);
-    console.log("endDate", endDate);
-    if (includeExpenses) {
+    if (includeExpenses && month && year) {
+      const startDate = new Date(year, month - 1, 1, 0, 0, 0, 0);
+      const endDate = new Date(year, month, 0, 23, 59, 59, 999);
       return BudgetRepo.getBudgetWithExpenses(user, startDate, endDate)  
     }
     return BudgetRepo.getBudgets(user)
