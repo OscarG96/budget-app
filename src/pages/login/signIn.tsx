@@ -96,7 +96,7 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
         setEmailErrorMessage(errorMap[result.error] ?? "Unexpected error");
         throw new Error(result.error);
       }
-      router.push("/dashboard");
+      router.push("/");
     } catch (error) {
       console.log(error);
     }
@@ -235,7 +235,7 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
                 variant="body2"
                 sx={{ alignSelf: 'center' }}
               >
-                Sign up
+                Register
               </Link>
             </Typography>
           </Box>

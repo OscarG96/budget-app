@@ -128,7 +128,7 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
       if (result?.error) {
         throw new Error(result.error);
       }
-      router.push("/dashboard");
+      router.push("/");
     } catch (error) {
       console.error(error)
       // setError((error as Error).message);
