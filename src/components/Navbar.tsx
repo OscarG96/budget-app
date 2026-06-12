@@ -9,7 +9,7 @@ export default function Navbar() {
 
   // Menu links stored in an array (No repetition!)
   const menuLinks = [
-    { name: "Home", path: "/dashboard" },
+    { name: "Home", path: "/" },
     { name: "Expenses", path: "/expenses" },
     { name: "Income", path: "/income" },
     { name: "Categories", path: "/categories" },
@@ -38,9 +38,9 @@ export default function Navbar() {
       <div className="container mx-auto flex justify-between items-center p-4">
 
         {/* Logo */}
-        <Link href="/" className="text-2xl font-bold">
+        <p className="text-2xl font-bold">
           BudgetApp
-        </Link>
+        </p>
 
         {/* Desktop Menu */}
         <div className="hidden md:flex items-center space-x-6">

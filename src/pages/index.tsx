@@ -1,62 +1,91 @@
+import RecentExpenses from "@/components/RecentExpenses";
+import Card from "@/components/Card";
+import { useEffect, useMemo, useState } from "react";
+import { BudgetWithCategoryAndExpenses, Expense, ExpenseWithCategory } from "@/types/types";
 import Spinner from "@/components/Spinner";
-import { useSession } from "next-auth/react";
-import Link from "next/link";
-import { useRouter } from "next/router";
+import { fetchBudgetswithExpenses } from "@/utils/api/budgetApi";
+import { BudgetTable } from "@/components/BudgetTable";
+import { fetchExpenses } from "@/utils/api/expensesApi";
 
-import React, { useEffect } from "react";
+interface ExpensesTable extends Expense {
+  category: {name: string}
+}
 
-const IndexPage = () => {
-  const { data: session, status } = useSession();
-  const router = useRouter();
+export default function Dashboard() {
+  const [expenses, setExpenses] = useState<ExpenseWithCategory[]>([]);
+  const [budgetWithCategoryAndExpenses, setbudgetWithCategoryAndExpenses] = useState<BudgetWithCategoryAndExpenses[]>([]);
+  const [loading, setLoading] = useState(true);
+  let currentDate = new Date()
+  let currentMonth = currentDate.getMonth() + 1
+  let currentYear = currentDate.getFullYear()
+
+  const total = useMemo(() => {
+    return expenses.reduce((sum, e) => sum + e.amount, 0);
+  }, [expenses]);
+
   useEffect(() => {
-    if (session) {
-      router.push('/dashboard');
-    }
-  }, [session, router]);
+    fetchBudgetswithExpenses(currentMonth, currentYear).then(setbudgetWithCategoryAndExpenses).catch(console.error);
+  }, []);
 
-  if (status === "loading") {
-    return <Spinner loading={status === "loading"} />;
+  useEffect(() => {
+    fetchExpenses(currentMonth, currentYear).then(setExpenses).catch(console.error).finally(() => setLoading(false))
+  }, []);
+
+  if (loading) {
+    return <Spinner loading={loading} />;
   }
 
   return (
-    <div className="min-h-screen flex flex-col">
-      {/* Hero Section */}
-      <section className="flex-1 flex flex-col items-center justify-center text-center py-16 px-4">
-        <h2 className="text-4xl font-bold text-gray-900">
-          Take Control of Your Finances with Ease!
-        </h2>
-        <p className="mt-4 text-lg text-gray-700">
-          Track expenses, set budgets, and gain financial insights—all in one place.
-        </p>
-        <div className="mt-6 space-x-4">
-          <Link href="/register" className="bg-green-500 text-white px-6 py-3 rounded-md text-lg hover:bg-green-600">
-            Get Started
-          </Link>
-          <Link href="/" className="bg-blue-500 text-white px-6 py-3 rounded-md text-lg hover:bg-blue-600">
-            Try Demo
-          </Link>
-        </div>
-      </section>
+    <>
+      {/* metrics */}
+      <div className="grid grid-cols-1 sm:grid-cols-4">
+        {/* <Card title={"Total Income:"} value={7000}></Card> */}
+        <Card title={"Total Spent:"} value={total}></Card>
+        {/* <Card title={"Net Balance:"} value={3000}></Card>
+        <Card title={"Savings:"} value={1000}></Card> */}
+      </div>
 
-      {/* Features Section */}
-      <section className="py-16 px-6 bg-white text-center">
-        <h3 className="text-3xl font-semibold text-gray-900">Why Choose BudgetMaster?</h3>
-        <div className="mt-8 grid md:grid-cols-2 lg:grid-cols-4 gap-8 text-lg text-gray-700">
-          {[
-            { icon: "📊", title: "Track Expenses Easily", description: "Log and categorize spending" },
-            { icon: "💰", title: "Manage Your Income", description: "Keep track of all sources" },
-            { icon: "📅", title: "Set Budgets & Goals", description: "Stay within your financial limits" },
-            { icon: "📈", title: "Visual Reports", description: "See where your money goes" },
-          ].map((feature, index) => (
-            <div key={index} className="flex flex-col items-center">
-              <span className="text-4xl">{feature.icon}</span>
-              <p><strong>{feature.title}</strong> - {feature.description}</p>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
+        <div>
+          <RecentExpenses expenses={expenses} />
+        </div>
+        <div>
+          <BudgetTable budgets={budgetWithCategoryAndExpenses} />
+        </div>
+        <div>
+          {/* <section className="px-4 py-1">
+            <div className="container m-auto max-w-2xl">
+              <div className='bg-white px-6 py-8 mb-4 shadow-md rounded-md border m-4 md:m-0"'>
+                <h2 className="text-3xl text-center font-semibold mb-6">Top Categories</h2>
+                <ResponsiveContainer width="100%" height={300}>
+                  <BarChart data={expenseCategories}>
+                    <XAxis dataKey="name" />
+                    <YAxis />
+                    <Tooltip />
+                    <Bar dataKey="value" fill="#82ca9d" />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
             </div>
-          ))}
+          </section> */}
+          {/* <section className="px-4 py-1">
+            <div className="container m-auto max-w-2xl">
+              <div className='bg-white px-6 py-8 mb-4 shadow-md rounded-md border m-4 md:m-0"'>
+                <h2 className="text-3xl text-center font-semibold mb-6">Income vs. Expenses</h2>
+                <ResponsiveContainer width="100%" height={300}>
+                  <BarChart data={incomeExpenseData}>
+                    <XAxis dataKey="name" />
+                    <YAxis />
+                    <Tooltip />
+                    <Bar dataKey="income" fill="#82ca9d" />
+                    <Bar dataKey="expenses" fill="#ff7300" />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+          </section> */}
         </div>
-      </section>      
-    </div>
+      </div>
+    </>
   );
-};
-
-export default IndexPage;
+}
