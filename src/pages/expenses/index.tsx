@@ -1,12 +1,12 @@
 import { ArrowsUpDownIcon } from '@heroicons/react/24/outline'
-import { Expenses, ExpenseWithCategory } from '@/types/types'; 
+import { Expense, ExpenseWithCategory } from '@/types/types'; 
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router';
 import Spinner from '@/components/Spinner';
 import AddExpense from '@/components/AddExpense';
 import { fetchExpenses } from '@/utils/api/expensesApi';
 
-interface ExpensesTable extends Expenses {
+interface ExpensesTable extends Expense {
   category: {name: string}
 }
 

@@ -1,11 +1,11 @@
-import { BudgetWithCategory, BudgetWithCategoryAndExpenses, Expenses } from "@/types/types"
+import { BudgetWithCategoryAndExpenses, Expense } from "@/types/types"
 
 type BudgetTableProps = {
   budgets: BudgetWithCategoryAndExpenses[]
 }
 
 export const BudgetTable: React.FC<BudgetTableProps> = ({budgets}) => {
-  const sumExpenses = (expenses: Expenses[]) => {
+  const sumExpenses = (expenses: Expense[]) => {
     return expenses.reduce((total, expense) => total + expense.amount, 0)
   }
   return (

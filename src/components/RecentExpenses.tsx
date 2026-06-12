@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import Spinner from './Spinner';
-import { Expenses } from '@/types/types'; 
+import { Expense } from '@/types/types'; 
 
-interface ExpensesTable extends Expenses {
+interface ExpensesTable extends Expense {
   category: {name: string}
 }
 

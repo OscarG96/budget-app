@@ -2,13 +2,13 @@ import RecentExpenses from "@/components/RecentExpenses";
 import Card from "@/components/Card";
 import { BarChart, PieChart, Bar, Pie, Cell, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
 import { useEffect, useMemo, useState } from "react";
-import { BudgetWithCategoryAndExpenses, Expenses, ExpenseWithCategory } from "@/types/types";
+import { BudgetWithCategoryAndExpenses, Expense, ExpenseWithCategory } from "@/types/types";
 import Spinner from "@/components/Spinner";
 import { fetchBudgetswithExpenses } from "@/utils/api/budgetApi";
 import { BudgetTable } from "@/components/BudgetTable";
 import { fetchExpenses } from "@/utils/api/expensesApi";
 
-interface ExpensesTable extends Expenses {
+interface ExpensesTable extends Expense {
   category: {name: string}
 }
 
