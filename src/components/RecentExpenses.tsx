@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import Spinner from './Spinner';
 import { Expense } from '@/types/types'; 
+import AddIcon from '@mui/icons-material/Add';
+import { Button } from '@mui/material';
+import { ExpenseDrawer } from './ExpenseDrawer';
 
 interface ExpensesTable extends Expense {
   category: {name: string}
@@ -12,30 +15,42 @@ type ExpensesListProps = {
 
 
 const RecentExpenses: React.FC<ExpensesListProps> = ({expenses}) => {
+  const [drawerOpen, setDrawerOpen] = useState(false);
   
   return (
     <section className="px-4 py-1">
       <div className="container m-auto max-w-2xl">
-        <div className='bg-white px-6 py-8 mb-4 shadow-md rounded-md border m-4 md:m-0"'>
-          <h2 className="text-3xl text-center font-semibold mb-6">Recent Expenses</h2>
+        <div className='px-2'>
+          <div className="flex flex-row justify-between items-center mb-2">
+            <h2 className="text-xl text-left font-semibold ">Recent Expenses</h2>
+            <Button onClick={() => setDrawerOpen(true)}>
+              <AddIcon className="text-gray-600"></AddIcon>
+            </Button>
+            
+          </div>
           <ul role="list" className="space-y-4">
             {expenses.map((expense, index) => (
-              <li key={index} className="bg-white shadow rounded-lg p-4">
+              <li key={index}>
                 <div className="flex justify-between items-start">
                   <div>
-                    <h3 className="text-lg font-semibold text-gray-800">{expense.description}</h3>
-                    <p className="text-sm text-gray-600">{expense.category.name}</p>
+                    <h3 className="text-sm font-semibold text-gray-800">{expense.description}</h3>
+                    <p className="text-xs text-gray-600">{expense.category.name}</p>
                   </div>
                   <div className="text-right">
-                    <p className="text-lg font-bold text-gray-800">${expense.amount.toFixed(2)}</p>
-                    <p className="text-sm text-gray-600">{new Date(expense.date).toDateString()}</p>
+                    <p className="text-sm font-bold text-gray-800">${expense.amount.toFixed(2)}</p>
+                    <p className="text-xs text-gray-600">{new Date(expense.date).toDateString()}</p>
                   </div>
                 </div>
+                <hr />
               </li>
             ))}
           </ul>
         </div>
       </div>
+      <ExpenseDrawer 
+        open={drawerOpen} 
+        onClose={() => setDrawerOpen(false)}>
+      </ExpenseDrawer>
     </section>
   )
 }
