@@ -5,6 +5,7 @@ import Spinner from "@/components/Spinner";
 import { fetchBudgetswithExpenses } from "@/utils/api/budgetApi";
 import { BudgetTable } from "@/components/BudgetTable";
 import { fetchExpenses } from "@/utils/api/expensesApi";
+import { ExpenseDrawer } from "@/components/ExpenseDrawer";
 
 interface ExpensesTable extends Expense {
   category: {name: string}
@@ -14,12 +15,12 @@ export default function Dashboard() {
   const [expenses, setExpenses] = useState<ExpenseWithCategory[]>([]);
   const [budgetWithCategoryAndExpenses, setbudgetWithCategoryAndExpenses] = useState<BudgetWithCategoryAndExpenses[]>([]);
   const [loading, setLoading] = useState(true);
+  const [drawerOpen, setDrawerOpen] = useState(false);
   let currentDate = new Date()
   let currentMonth = currentDate.getMonth() + 1
   let currentYear = currentDate.getFullYear()
   const monthString = currentDate.toLocaleString("es-MX", { month: "long" });
   const monthCapitalized = monthString.charAt(0).toUpperCase() + monthString.slice(1)
-  console.log(monthCapitalized)
 
   const total = useMemo(() => {
     return expenses.reduce((sum, e) => sum + e.amount, 0);
@@ -54,7 +55,14 @@ export default function Dashboard() {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
         <BudgetTable budgets={budgetWithCategoryAndExpenses} />
-        <RecentExpenses expenses={expenses} />
+        <RecentExpenses 
+          expenses={expenses}
+          onAddExpense={() => setDrawerOpen(true)}
+        />
+        <ExpenseDrawer
+          open={drawerOpen} 
+          onClose={() => setDrawerOpen(false)}>
+        </ExpenseDrawer>
         <div>
           {/* <section className="px-4 py-1">
             <div className="container m-auto max-w-2xl">

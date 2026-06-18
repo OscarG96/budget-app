@@ -11,11 +11,11 @@ interface ExpensesTable extends Expense {
 
 type ExpensesListProps = {
   expenses: ExpensesTable[];
+  onAddExpense: () => void
 };
 
 
-const RecentExpenses: React.FC<ExpensesListProps> = ({expenses}) => {
-  const [drawerOpen, setDrawerOpen] = useState(false);
+const RecentExpenses: React.FC<ExpensesListProps> = ({expenses, onAddExpense}) => {
   
   return (
     <section className="px-4 py-1">
@@ -23,10 +23,9 @@ const RecentExpenses: React.FC<ExpensesListProps> = ({expenses}) => {
         <div className='px-2'>
           <div className="flex flex-row justify-between items-center mb-2">
             <h2 className="text-xl text-left font-semibold ">Recent Expenses</h2>
-            <Button onClick={() => setDrawerOpen(true)}>
+            <Button onClick={onAddExpense}>
               <AddIcon className="text-gray-600"></AddIcon>
             </Button>
-            
           </div>
           <ul role="list" className="space-y-4">
             {expenses.map((expense, index) => (
@@ -47,10 +46,6 @@ const RecentExpenses: React.FC<ExpensesListProps> = ({expenses}) => {
           </ul>
         </div>
       </div>
-      <ExpenseDrawer 
-        open={drawerOpen} 
-        onClose={() => setDrawerOpen(false)}>
-      </ExpenseDrawer>
     </section>
   )
 }

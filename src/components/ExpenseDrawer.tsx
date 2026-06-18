@@ -1,6 +1,6 @@
 import { Category } from "@/types/types";
 import { fetchCategories } from "@/utils/api/categoriesApi";
-import { Drawer } from "@mui/material"
+import { Autocomplete, Box, Button, Drawer, FormControl, InputAdornment, Stack, TextField } from "@mui/material"
 import { useEffect, useState } from "react";
 import CloseIcon from '@mui/icons-material/Close';
 import { createExpense } from "@/utils/api/expensesApi";
@@ -8,10 +8,10 @@ import { toast } from "react-toastify";
 
 interface ExpenseDrawerProps {
   open: boolean
-  onClose: (event: any, reason: "backdropClick" | "escapeKeyDown") => void
+  onClose: () => void
 }
 
-export const ExpenseDrawer: React.FC<ExpenseDrawerProps> = ({open, onClose}) => {
+export const ExpenseDrawer: React.FC<ExpenseDrawerProps> = ({ open, onClose }) => {
   const [loading, setLoading] = useState(true);
   const [expense, setExpense] = useState({
     amount: "",
@@ -38,9 +38,9 @@ export const ExpenseDrawer: React.FC<ExpenseDrawerProps> = ({open, onClose}) => 
     })
   }
 
-  const handleDrawerClose = (_event: any, _reason: "backdropClick" | "escapeKeyDown") => {
+  const handleDrawerClose = () => {
     clearForm()
-    onClose(_event, _reason)
+    onClose()
   }
 
   const clearForm = () => {
@@ -60,6 +60,7 @@ export const ExpenseDrawer: React.FC<ExpenseDrawerProps> = ({open, onClose}) => 
       })
       .finally(() => setLoading(false))
   }, [setCategories, setExpense])
+
   return (
     <Drawer
       anchor='bottom'
@@ -68,17 +69,17 @@ export const ExpenseDrawer: React.FC<ExpenseDrawerProps> = ({open, onClose}) => 
     >
       <div className="flex justify-center h-full">
         <div className="w-full max-w-2xl bg-white p-6 rounded-lg">
-          <form onSubmit={submitForm}>
+          <FormControl fullWidth onSubmit={submitForm}>
             <h2 className="text-3xl text-center font-semibold mb-6">Add Expense</h2>
             <button
-              onClick={() => handleDrawerClose({}, "escapeKeyDown")}
+              onClick={handleDrawerClose}
               type='button'
               className="absolute top-4 right-4 text-gray-600 hover:text-gray-900"
             >
               <CloseIcon></CloseIcon>
             </button>
             <div className="mb-4">
-              <label htmlFor="description" className="block text-gray-700 font-bold mb-2">
+              {/* <label htmlFor="description" className="block text-gray-700 font-bold mb-2">
                 Description
               </label>
               <input
@@ -90,68 +91,66 @@ export const ExpenseDrawer: React.FC<ExpenseDrawerProps> = ({open, onClose}) => 
                 required
                 value={expense?.description}
                 onChange={(e) => setExpense({ ...expense, description: e.target.value })}
+              /> */}
+              <TextField
+                fullWidth
+                type="text"
+                label="Description"
+                id="description"
+                value={expense?.description}
+                onChange={(e) => setExpense({ ...expense, description: e.target.value })}
               />
             </div>
             <div className="mb-4">
-              <label htmlFor="amount" className="block text-gray-700 font-bold mb-2">
-                Amount
-              </label>
-              <input
-                type="number"
-                id="amount"
-                name="title"
-                className="border rounded w-full py-2 px-3 mb-2"
-                placeholder="eg. 1000"
-                required
-                value={expense?.amount}
+              <Autocomplete
+                disablePortal
+                options={categories}
+                getOptionLabel={(option) => option.name}
+                value={categories.find(cat => cat.id === parseInt(expense.categoryId)) || null}
+                onChange={(_, value) => setExpense({ ...expense, categoryId: value?.id.toString() || "0" })}
+                sx={{ width: "100%" }}
+                renderInput={(params) => <TextField {...params} label="Select a category" />}
+              />
+            </div>
+            <div className="flex gap-4">
+              <TextField id="amount"
+                label="Amount"
+                variant="outlined"
                 onChange={(e) => setExpense({ ...expense, amount: e.target.value })}
+                value={expense?.amount}
+                type="number"
+                fullWidth
+              />
+              <TextField
+                label="Date"
+                type="date"
+                value={expense.date}
+                onChange={(e) =>
+                  setExpense({
+                    ...expense,
+                    date: e.target.value,
+                  })
+                }
+                fullWidth
               />
             </div>
-            <div className="mb-4">
-              <label htmlFor="category" className="block text-gray-700 font-bold mb-2">
-                Category
-              </label>
-              <select
-                id="type"
-                name="category"
-                className="border rounded w-full py-2 px-3"
-                required
-                value={expense?.categoryId}
-                onChange={(e) => setExpense({ ...expense, categoryId: e.target.value })}>
-                <option disabled key="0" value="0">
-                  -- Select --
-                </option>
-                {categories.map((category) => (
-                  <option key={category.id} value={category.id}>
-                    {category.name}
-                  </option>
-                ))}
-                {/* default option */}
-              </select>
-            </div>
-            <div className='mb-4'>
-              <label htmlFor="date" className='block text-gray-700 font-bold mb-2'>
-                Date
-              </label>
-              <input
-                type='date'
-                id='date'
-                name='date'
-                className='border rounded w-full py-2 px-3'
-                required
-                value={expense?.date}
-                onChange={(e) => setExpense({ ...expense, date: (e.target.value) })}
-              />
-            </div>
-            <div>
+            {/* <div>
               <button
                 className="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline"
                 type="submit"
               >
                 Add Expense
               </button>
-            </div>
-          </form>
+            </div> */}
+            <Stack direction='row' spacing={2} marginTop={2}>
+              <Button
+                fullWidth
+                variant="contained"
+              >
+                Add Expense
+              </Button>
+            </Stack>
+          </FormControl>
         </div>
       </div>
     </Drawer>
