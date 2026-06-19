@@ -1,6 +1,6 @@
 import { Category } from "@/types/types";
 import { fetchCategories } from "@/utils/api/categoriesApi";
-import { Autocomplete, Box, Button, Drawer, FormControl, InputAdornment, Stack, TextField } from "@mui/material"
+import { Autocomplete, Box, Button, Drawer, InputAdornment, Stack, TextField } from "@mui/material"
 import { useEffect, useState } from "react";
 import CloseIcon from '@mui/icons-material/Close';
 import { createExpense } from "@/utils/api/expensesApi";
@@ -9,14 +9,15 @@ import { toast } from "react-toastify";
 interface ExpenseDrawerProps {
   open: boolean
   onClose: () => void
+  onCreated: (res: any) => void
 }
 
-export const ExpenseDrawer: React.FC<ExpenseDrawerProps> = ({ open, onClose }) => {
+export const ExpenseDrawer: React.FC<ExpenseDrawerProps> = ({ open, onClose, onCreated }) => {
   const [loading, setLoading] = useState(true);
   const [expense, setExpense] = useState({
     amount: "",
     description: "",
-    categoryId: "0",
+    categoryId: "0",    
     date: new Date().toISOString().split("T")[0]
   })
   const [categories, setCategories] = useState<Category[]>([])
@@ -28,9 +29,17 @@ export const ExpenseDrawer: React.FC<ExpenseDrawerProps> = ({ open, onClose }) =
       categoryId: parseInt(expense.categoryId),
       // date: expense.date.toString()
     }
-    console.log(parsedExpense)
-    createExpense(parsedExpense).then(() => {
+
+    createExpense(parsedExpense).then((res) => {
       toast.success("Expense added successfully")
+      const categoryData = categories.find(cat => cat.id === res.categoryId)
+      if (categoryData) {
+        const expenseWithCategory = {
+          ...res,
+          category: categoryData
+        }
+        onCreated(expenseWithCategory)
+      }
       clearForm()
     }).catch((err) => {
       toast.error("Failed to add expense")
@@ -69,7 +78,7 @@ export const ExpenseDrawer: React.FC<ExpenseDrawerProps> = ({ open, onClose }) =
     >
       <div className="flex justify-center h-full">
         <div className="w-full max-w-2xl bg-white p-6 rounded-lg">
-          <FormControl fullWidth onSubmit={submitForm}>
+          <form onSubmit={submitForm} className="w-full">
             <h2 className="text-3xl text-center font-semibold mb-6">Add Expense</h2>
             <button
               onClick={handleDrawerClose}
@@ -79,19 +88,6 @@ export const ExpenseDrawer: React.FC<ExpenseDrawerProps> = ({ open, onClose }) =
               <CloseIcon></CloseIcon>
             </button>
             <div className="mb-4">
-              {/* <label htmlFor="description" className="block text-gray-700 font-bold mb-2">
-                Description
-              </label>
-              <input
-                type="text"
-                id="description"
-                name="title"
-                className="border rounded w-full py-2 px-3 mb-2"
-                placeholder="eg. Beautiful Apartment In Miami"
-                required
-                value={expense?.description}
-                onChange={(e) => setExpense({ ...expense, description: e.target.value })}
-              /> */}
               <TextField
                 fullWidth
                 type="text"
@@ -146,11 +142,12 @@ export const ExpenseDrawer: React.FC<ExpenseDrawerProps> = ({ open, onClose }) =
               <Button
                 fullWidth
                 variant="contained"
+                type="submit"
               >
                 Add Expense
               </Button>
             </Stack>
-          </FormControl>
+          </form>
         </div>
       </div>
     </Drawer>

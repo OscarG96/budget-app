@@ -3,7 +3,7 @@ import Spinner from './Spinner';
 import { Expense } from '@/types/types'; 
 import AddIcon from '@mui/icons-material/Add';
 import { Button } from '@mui/material';
-import { ExpenseDrawer } from './ExpenseDrawer';
+import Link from "next/link"
 
 interface ExpensesTable extends Expense {
   category: {name: string}
@@ -20,7 +20,7 @@ const RecentExpenses: React.FC<ExpensesListProps> = ({expenses, onAddExpense}) =
   return (
     <section className="px-4 py-1">
       <div className="container m-auto max-w-2xl">
-        <div className='px-2'>
+        <div className='px-2 mb-4'>
           <div className="flex flex-row justify-between items-center mb-2">
             <h2 className="text-xl text-left font-semibold ">Recent Expenses</h2>
             <Button onClick={onAddExpense}>
@@ -44,6 +44,16 @@ const RecentExpenses: React.FC<ExpensesListProps> = ({expenses, onAddExpense}) =
               </li>
             ))}
           </ul>
+        </div>
+        <div>
+          <Button
+            fullWidth
+            variant='outlined'
+            LinkComponent={Link}
+            href='/expenses'
+          >
+            See all expenses
+          </Button>
         </div>
       </div>
     </section>

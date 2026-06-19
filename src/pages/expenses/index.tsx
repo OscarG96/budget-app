@@ -1,13 +1,14 @@
 import { ArrowsUpDownIcon } from '@heroicons/react/24/outline'
-import { Expense, ExpenseWithCategory } from '@/types/types'; 
+import { Expense, ExpenseWithCategory } from '@/types/types';
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router';
 import Spinner from '@/components/Spinner';
 import AddExpense from '@/components/AddExpense';
 import { fetchExpenses } from '@/utils/api/expensesApi';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 
 interface ExpensesTable extends Expense {
-  category: {name: string}
+  category: { name: string }
 }
 
 const AllExpensesPage = () => {
@@ -19,7 +20,7 @@ const AllExpensesPage = () => {
   const [expenses, setExpenses] = useState<ExpenseWithCategory[]>([]);
   const [loading, setLoading] = useState(true);
   const [isFormOpen, setIsFormOpen] = useState(false)
-  
+
   let currentDate = new Date()
   let currentMonth = currentDate.getMonth() + 1
   let currentYear = currentDate.getFullYear()
@@ -27,8 +28,8 @@ const AllExpensesPage = () => {
     fetchExpenses(currentMonth, currentYear).then(setExpenses).catch(console.error).finally(() => setLoading(false))
   }, []);
 
-  const fields = expenses.length > 0 
-    ? Object.keys(expenses[0]).filter(field => !["authorId", "id", "categoryId"].includes(field)) 
+  const fields = expenses.length > 0
+    ? Object.keys(expenses[0]).filter(field => !["authorId", "id", "categoryId"].includes(field))
     : [];
 
   const handleSort = (key: string) => {
@@ -49,77 +50,37 @@ const AllExpensesPage = () => {
     const date = new Date(dateString)
     return date.toLocaleDateString('es-MX') // Format as MM/DD/YYYY
   }
-  
+
   if (loading) {
-    return <Spinner loading={loading}/>;
+    return <Spinner loading={loading} />;
   }
 
   return (
-    <section className="px-4 py-4">
+    <section className="px-4 py-1">
       <div className="container m-auto max-w-2xl">
-        <div className='flex justify-between items-start mb-2'>
-          <div>
-            <h2 className="text-2xl font-semibold">All Expenses</h2>
-          </div>
-          <div>
-            <button
-              className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 w-full sm:w-auto focus:outline-none focus:shadow-outline"
-              type="button"
-              onClick={() => setIsFormOpen(true)}
-            >
-              Add Expense
-            </button>
-          </div>
-        </div>
-
-        {/* Table with responsive scrolling */}
-        <div className="overflow-x-auto">
-          <table className="min-w-full border-collapse table-auto">
-            <thead>
-              <tr className="bg-gray-200">
-                {fields.map((key) => (
-                  <th
-                    key={key}
-                    className="p-3 text-left cursor-pointer"
-                    onClick={() => handleSort(key)}
-                  >
-                    {key.charAt(0).toUpperCase() + key.slice(1)}
-                    <ArrowsUpDownIcon className="inline-block w-4 h-4 ml-1" />
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
+        <h2 className="text-xl text-left font-semibold ml-3">Expenses</h2>
+        <TableContainer>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>Description</TableCell>
+                <TableCell>Category</TableCell>
+                <TableCell>Amount</TableCell>
+                <TableCell>Date</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
               {sortedExpenses.map((expense, index) => (
-                <tr key={index} className="border-b hover:bg-gray-100 transition-colors">
-                  {fields.map((key) => (
-                    <td key={key} className="p-3 text-sm sm:text-base">
-                    {key === "amount"
-                      ? `$${(expense[key as keyof ExpensesTable] as number).toFixed(2)}`
-                      : key === "date"
-                      ? formatDate(String(expense[key as keyof ExpensesTable])) // Format the date
-                      : key === "category"
-                      ? expense.category.name
-                      : String(expense[key as keyof ExpensesTable])
-                      }
-                  </td>
-                  ))}
-                </tr>
+                <TableRow key={index}>
+                  <TableCell>{expense.description}</TableCell>
+                  <TableCell>{expense.category.name}</TableCell>
+                  <TableCell>${expense.amount}</TableCell>
+                  <TableCell>{formatDate(expense.date)}</TableCell>
+                </TableRow>
               ))}
-            </tbody>
-          </table>
-        </div>
-        <div
-          className={`fixed left-0 right-0 top-[64px] bg-white transform transition-transform duration-300 ease-in-out z-50 ${isFormOpen ? "translate-y-0" : "translate-y-full"
-            }`}
-          style={{ height: "calc(100vh - 64px)" }} // Adjust based on navbar height
-        >
-          <div className="flex justify-center h-full">
-            <div className="w-full max-w-2xl bg-white p-6 rounded-lg">
-              <AddExpense onClose={() => setIsFormOpen(false)} />
-            </div>
-          </div>
-        </div>
+            </TableBody>
+          </Table>
+        </TableContainer>
       </div>
     </section>
   )

@@ -34,6 +34,11 @@ export default function Dashboard() {
     fetchExpenses(currentMonth, currentYear).then(setExpenses).catch(console.error).finally(() => setLoading(false))
   }, []);
 
+  const handleExpenseCreated = (expense: ExpenseWithCategory) => {
+    setExpenses(prev => [expense, ...prev]);
+    console.log(expense);
+  };
+
   if (loading) {
     return <Spinner loading={loading} />;
   }
@@ -61,7 +66,9 @@ export default function Dashboard() {
         />
         <ExpenseDrawer
           open={drawerOpen} 
-          onClose={() => setDrawerOpen(false)}>
+          onClose={() => setDrawerOpen(false)}
+          onCreated={handleExpenseCreated}
+        >
         </ExpenseDrawer>
         <div>
           {/* <section className="px-4 py-1">
