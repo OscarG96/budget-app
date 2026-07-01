@@ -13,7 +13,7 @@ export class UsersService {
         throw new Error("Email, password and name are required")
       }
       const user = await UsersRepo.createUser(name, email, password)
-      await CategoriesService.setDefaultCategories(user.id);
+      // await CategoriesService.setDefaultCategories(user.id);
       return user;
     } catch (error) {
       return error;

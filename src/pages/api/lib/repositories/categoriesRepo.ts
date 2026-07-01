@@ -3,16 +3,21 @@ import { prisma } from "../prisma";
 
 export class CategoriesRepo {
   static async getCategories(user: User) {
-    return prisma.categories.findMany({ 
-      where: { authorId: user?.id ?? undefined }, 
-      })
+    return prisma.categories.findMany({
+      where: {
+        OR: [
+          { authorId: user.id },
+          { authorId: null },
+        ],
+      },
+    });
   }
 
   static async getCategory(id: number) {
     return prisma.categories.findUnique({ where: { id } })
   }
 
-  static async createCategory(user: User, categoryName: string ) {
+  static async createCategory(user: User, categoryName: string) {
     return prisma.categories.create({
       data: { name: categoryName, authorId: user.id }
     })

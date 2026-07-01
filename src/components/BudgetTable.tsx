@@ -17,14 +17,16 @@ export const BudgetTable: React.FC<BudgetTableProps> = ({ budgets }) => {
         <h2 className="text-xl text-left font-semibold ml-3">Budget</h2>
         <Table>
           <TableHead>
-            {/* <TableCell></TableCell> */}
-            <TableCell>Category</TableCell>
-            <TableCell>Current</TableCell>
-            <TableCell>Remaining</TableCell>
+            <TableRow>
+              {/* <TableCell></TableCell> */}
+              <TableCell>Category</TableCell>
+              <TableCell>Current</TableCell>
+              <TableCell>Remaining</TableCell>
+            </TableRow>
           </TableHead>
           <TableBody>
             {budgets.map((budget, index) => (
-              <TableRow>
+              <TableRow key={index}>
                 {/* <TableCell><LocalGroceryStoreIcon></LocalGroceryStoreIcon> </TableCell> */}
                 <TableCell>{budget.category.name}</TableCell>
                 <TableCell>${sumExpenses(budget.category.expenses)}</TableCell>

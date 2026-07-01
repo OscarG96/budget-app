@@ -1,5 +1,8 @@
 import { Budget, User } from "@prisma/client";
 import { prisma } from "../prisma";
+import { CreateBudget } from "../../schemas/schemas";
+
+
 
 export class BudgetRepo {
   static async getBudgets(user: User) {
@@ -9,7 +12,7 @@ export class BudgetRepo {
       })
   }
 
-  static async createBudget(user: User, budget: Budget) {
+  static async createBudget(user: User, budget: CreateBudget) {
     return prisma.budget.create({
       data: { ...budget, authorId: user.id}
     })

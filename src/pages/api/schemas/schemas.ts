@@ -24,3 +24,11 @@ export const UserRegisterSchema = z.object({
   name: z.string(),
   password: z.string(),
 });
+
+export const CreateBudgetSchema = z.object({
+  categoryId: z.number(),
+  monthlyLimit: z.number(),
+})
+
+export type GetBudgetsQuery = z.infer<typeof BudgetQuerySchema>;
+export type CreateBudget = z.infer<typeof CreateBudgetSchema>
