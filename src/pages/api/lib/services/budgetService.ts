@@ -2,10 +2,11 @@ import type { User } from "@prisma/client"
 import { BudgetRepo } from "../repositories/budgetRepo"
 import { CategoriesRepo } from "../repositories/categoriesRepo"
 import { BudgetWithCategory } from "@/types/types"
-import { BudgetQuerySchema } from "../../schemas/schemas";
+import type { CreateBudget, GetBudgetsQuery } from "../../schemas/schemas";
 import { z } from "zod";
 
-type GetBudgetsQuery = z.infer<typeof BudgetQuerySchema>;
+// type GetBudgetsQuery = z.infer<typeof BudgetQuerySchema>;
+// import type CreateBudget = z.infer<typeof CreateBudgetSchema>
 
 export class BudgetService {
   static async getUserBudgets(user: User, query: GetBudgetsQuery) {
@@ -18,13 +19,14 @@ export class BudgetService {
     return BudgetRepo.getBudgets(user)
   }
 
-  static async createBudget(user: User,  budget: BudgetWithCategory) {
-    let existingCategory = await CategoriesRepo.getCategory(budget.category.id)
+  static async createBudget(user: User,  budget: CreateBudget) {
+    const { monthlyLimit, categoryId } = budget
+    let existingCategory = await CategoriesRepo.getCategory(categoryId)
     if (!existingCategory) {
       //create category if does not exist 
-      existingCategory = await CategoriesRepo.createCategory(user, budget.category.name )
+      // existingCategory = await CategoriesRepo.createCategory(user, budget.category.name )
+      throw "Category does not exist"
     }
-    const { category, ...budgetWithoutCategory } = budget
-    return BudgetRepo.createBudget(user, { ...budgetWithoutCategory, categoryId: existingCategory.id })
+    return BudgetRepo.createBudget(user, { monthlyLimit, categoryId: existingCategory.id })
   }
 }

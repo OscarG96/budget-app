@@ -51,9 +51,9 @@ model Budget {
 
 model Categories {
   id              Int    @id @default(autoincrement())
-  name            String
-  author          User @relation(fields: [authorId], references: [id])
-  authorId        Int
+  name            String @unique
+  author          User? @relation(fields: [authorId], references: [id])
+  authorId        Int?
   createdAt       DateTime @default(now())
   budget          Budget[]
   expenses        Expenses[]

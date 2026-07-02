@@ -35,7 +35,7 @@ export class ExpensesRepository {
   }
 
   static async createExpense(expense: Expenses, user: User) {
-    await prisma.expenses.create({
+    return prisma.expenses.create({
       data: {
         amount: expense.amount,
         description: expense.description,

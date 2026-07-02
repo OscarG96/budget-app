@@ -25,7 +25,8 @@ const handlers: Record<HttpMethod, Handler> = {
   POST: async (req: AuthenticatedRequest, res: NextApiResponse) => {
     const expense = req.body;
     if (req.user) {
-      await ExpensesService.createExpense(expense, req.user);
+      const expenseCreated = await ExpensesService.createExpense(expense, req.user);
+      res.status(200).send(expenseCreated);
     } else {
       res.status(400).json({ message: "User not found" });
     }
