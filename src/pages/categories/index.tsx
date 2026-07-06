@@ -81,9 +81,9 @@ const BudgetPage = () => {
         <form onSubmit={submitForm} className="mt-6 space-y-4">
           <div className="flex flex-row justify-between items-baseline">
             <h2 className="text-lg text-center font-semibold">Add a budget</h2>
-            <Button size="small" variant="outlined" onClick={() => setDrawerOpen(true)} startIcon={<AddIcon />}>
+            {/* <Button size="small" variant="outlined" onClick={() => setDrawerOpen(true)} startIcon={<AddIcon />}>
               Category
-            </Button>
+            </Button> */}
           </div>
           <Autocomplete
             disablePortal

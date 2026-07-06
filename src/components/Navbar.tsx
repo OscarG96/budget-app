@@ -11,7 +11,6 @@ export default function Navbar() {
   const menuLinks = [
     { name: "Home", path: "/" },
     { name: "Expenses", path: "/expenses" },
-    { name: "Income", path: "/income" },
     { name: "Categories", path: "/categories" },
   ];
 
