@@ -56,7 +56,7 @@ const AllExpensesPage = () => {
   }
 
   return (
-    <section className="px-4 py-1">
+    <section className="px-4 py-5">
       <div className="container m-auto max-w-2xl">
         <h2 className="text-xl text-left font-semibold ml-3">Expenses</h2>
         <TableContainer>
