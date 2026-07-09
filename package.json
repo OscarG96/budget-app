@@ -2,6 +2,7 @@
   "name": "budget-app",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev",
     "build": "npx prisma db push --accept-data-loss && npx prisma generate && next build",
@@ -21,6 +22,7 @@
     "@mui/icons-material": "^7.3.11",
     "@mui/material": "^7.3.9",
     "@prisma/client": "^5.22.0",
+    "@serwist/next": "^9.5.11",
     "@tanstack/react-table": "^8.21.2",
     "bcryptjs": "^3.0.0",
     "clsx": "^2.1.1",
@@ -46,6 +48,7 @@
     "framer-motion": "^12.5.0",
     "postcss": "^8",
     "prisma": "^5.22.0",
+    "serwist": "^9.5.11",
     "tailwindcss": "^3.4.1",
     "ts-node": "^10.9.2",
     "typescript": "^5"
