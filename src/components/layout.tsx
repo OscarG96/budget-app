@@ -4,7 +4,6 @@ import Footer from './footer'
 // import "react-toastify/dist/ReactToastify.css";
 import Navigation from "./Navigation";
 
-
 const ToastContainer = dynamic(
   () => import("react-toastify").then((mod) => mod.ToastContainer),
   { ssr: false } // Prevents SSR issues
