@@ -28,11 +28,11 @@ export default function Dashboard() {
 
   useEffect(() => {
     fetchBudgetswithExpenses(currentMonth, currentYear).then(setbudgetWithCategoryAndExpenses).catch(console.error);
-  }, []);
+  }, [currentMonth, currentYear]);
 
   useEffect(() => {
     fetchExpenses(currentMonth, currentYear).then(setExpenses).catch(console.error).finally(() => setLoading(false))
-  }, []);
+  }, [currentMonth, currentYear]);
 
   const handleExpenseCreated = (expense: ExpenseWithCategory) => {
     setExpenses(prev => [expense, ...prev]);
@@ -45,14 +45,6 @@ export default function Dashboard() {
 
   return (
     <>
-      {/* metrics */}
-      {/* <div className="grid grid-cols-1 sm:grid-cols-4">
-        <Card title={"Total Income:"} value={7000}></Card>
-        <Card title={"Total Spent:"} value={total}></Card>
-        <Card title={"Net Balance:"} value={3000}></Card>
-        <Card title={"Savings:"} value={1000}></Card>
-      </div> */}
-
       <div className="flex flex-row mt-5 mb-4 px-4 items-end justify-between">
         <p className="text-3xl">{monthCapitalized}</p>
         <p>${total}</p>
@@ -70,39 +62,6 @@ export default function Dashboard() {
           onCreated={handleExpenseCreated}
         >
         </ExpenseDrawer>
-        <div>
-          {/* <section className="px-4 py-1">
-            <div className="container m-auto max-w-2xl">
-              <div className='bg-white px-6 py-8 mb-4 shadow-md rounded-md border m-4 md:m-0"'>
-                <h2 className="text-3xl text-center font-semibold mb-6">Top Categories</h2>
-                <ResponsiveContainer width="100%" height={300}>
-                  <BarChart data={expenseCategories}>
-                    <XAxis dataKey="name" />
-                    <YAxis />
-                    <Tooltip />
-                    <Bar dataKey="value" fill="#82ca9d" />
-                  </BarChart>
-                </ResponsiveContainer>
-              </div>
-            </div>
-          </section> */}
-          {/* <section className="px-4 py-1">
-            <div className="container m-auto max-w-2xl">
-              <div className='bg-white px-6 py-8 mb-4 shadow-md rounded-md border m-4 md:m-0"'>
-                <h2 className="text-3xl text-center font-semibold mb-6">Income vs. Expenses</h2>
-                <ResponsiveContainer width="100%" height={300}>
-                  <BarChart data={incomeExpenseData}>
-                    <XAxis dataKey="name" />
-                    <YAxis />
-                    <Tooltip />
-                    <Bar dataKey="income" fill="#82ca9d" />
-                    <Bar dataKey="expenses" fill="#ff7300" />
-                  </BarChart>
-                </ResponsiveContainer>
-              </div>
-            </div>
-          </section> */}
-        </div>
       </div>
     </>
   );

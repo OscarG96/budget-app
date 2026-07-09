@@ -30,7 +30,6 @@
     },
     "target": "es2017",
     "forceConsistentCasingInFileNames": true,
-    "ignoreDeprecations": "6.0"
   },
   "include": [
     "next-env.d.ts",

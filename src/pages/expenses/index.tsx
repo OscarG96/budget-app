@@ -24,22 +24,10 @@ const AllExpensesPage = () => {
   let currentDate = new Date()
   let currentMonth = currentDate.getMonth() + 1
   let currentYear = currentDate.getFullYear()
+
   useEffect(() => {
     fetchExpenses(currentMonth, currentYear).then(setExpenses).catch(console.error).finally(() => setLoading(false))
-  }, []);
-
-  const fields = expenses.length > 0
-    ? Object.keys(expenses[0]).filter(field => !["authorId", "id", "categoryId"].includes(field))
-    : [];
-
-  const handleSort = (key: string) => {
-    if (sortKey === key) {
-      setSortOrder(sortOrder === "asc" ? "desc" : "asc");
-    } else {
-      setSortKey(key);
-      setSortOrder("asc");
-    }
-  };
+  }, [currentMonth, currentYear]);
 
   const sortedExpenses = [...expenses].sort((a, b) => {
     if (sortOrder === "asc") return a[sortKey as keyof ExpensesTable] > b[sortKey as keyof ExpensesTable] ? 1 : -1;
