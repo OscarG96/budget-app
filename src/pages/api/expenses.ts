@@ -3,6 +3,7 @@ import { User } from "@prisma/client";
 import { Session } from "next-auth";
 import { ExpensesService } from "./lib/services/expensesService";
 import { UsersService } from "./lib/services/usersService";
+import { GetExpensesSchema } from "./schemas/schemas";
 
 type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE';
 type Handler = (req: AuthenticatedRequest, res: NextApiResponse) => Promise<void>;
@@ -15,8 +16,17 @@ interface AuthenticatedRequest extends NextApiRequest {
 const handlers: Record<HttpMethod, Handler> = {
   GET: async (req: AuthenticatedRequest, res: NextApiResponse) => {
     if (req.user) {
-      const query = req.query;
-      const expenses = await ExpensesService.getExpenses(req.user, query)
+      // TODO: util function to parse query and return error 
+      const parsed = GetExpensesSchema.safeParse(req.query);
+      if (!parsed.success) {
+        console.log("Error parsing query", parsed.error);
+        return res.status(400).json({
+          error: 'Invalid query params',
+          details: parsed.error.flatten(),
+        });
+      }
+      const query = parsed.data;
+      const expenses = await ExpensesService.getExpenses(req.user, query);
       res.status(200).send(expenses);
     } else {
       res.status(400).json({ message: "User not found" });

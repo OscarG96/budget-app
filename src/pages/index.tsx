@@ -4,7 +4,7 @@ import { BudgetWithCategoryAndExpenses, Expense, ExpenseWithCategory } from "@/t
 import Spinner from "@/components/Spinner";
 import { fetchBudgetswithExpenses } from "@/utils/api/budgetApi";
 import { BudgetTable } from "@/components/BudgetTable";
-import { fetchExpenses } from "@/utils/api/expensesApi";
+import { fetchExpenses, fetchExpensesTotalAmount } from "@/utils/api/expensesApi";
 import { ExpenseDrawer } from "@/components/ExpenseDrawer";
 
 interface ExpensesTable extends Expense {
@@ -14,6 +14,7 @@ interface ExpensesTable extends Expense {
 export default function Dashboard() {
   const [expenses, setExpenses] = useState<ExpenseWithCategory[]>([]);
   const [budgetWithCategoryAndExpenses, setbudgetWithCategoryAndExpenses] = useState<BudgetWithCategoryAndExpenses[]>([]);
+  const [totalExpensesAmount, setTotalExpensesAmount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [drawerOpen, setDrawerOpen] = useState(false);
   let currentDate = new Date()
@@ -31,7 +32,11 @@ export default function Dashboard() {
   }, [currentMonth, currentYear]);
 
   useEffect(() => {
-    fetchExpenses(currentMonth, currentYear).then(setExpenses).catch(console.error).finally(() => setLoading(false))
+    fetchExpenses(currentMonth, currentYear, 10, false).then(setExpenses).catch(console.error).finally(() => setLoading(false))
+  }, [currentMonth, currentYear]);
+
+  useEffect(() => {
+    fetchExpensesTotalAmount(currentMonth, currentYear, 1000, true).then(setTotalExpensesAmount).catch(console.error).finally(() => setLoading(false))
   }, [currentMonth, currentYear]);
 
   const handleExpenseCreated = (expense: ExpenseWithCategory) => {
@@ -47,7 +52,7 @@ export default function Dashboard() {
     <>
       <div className="flex flex-row mt-5 mb-4 px-4 items-end justify-between">
         <p className="text-3xl">{monthCapitalized}</p>
-        <p>${total}</p>
+        <p>${totalExpensesAmount}</p>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">

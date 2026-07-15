@@ -5,7 +5,7 @@ import { useRouter } from 'next/router';
 import Spinner from '@/components/Spinner';
 import AddExpense from '@/components/AddExpense';
 import { fetchExpenses } from '@/utils/api/expensesApi';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TableRow } from '@mui/material';
 
 interface ExpensesTable extends Expense {
   category: { name: string }
@@ -26,13 +26,13 @@ const AllExpensesPage = () => {
   let currentYear = currentDate.getFullYear()
 
   useEffect(() => {
-    fetchExpenses(currentMonth, currentYear).then(setExpenses).catch(console.error).finally(() => setLoading(false))
+    fetchExpenses(currentMonth, currentYear, 1000, false).then(setExpenses).catch(console.error).finally(() => setLoading(false))
   }, [currentMonth, currentYear]);
 
-  const sortedExpenses = [...expenses].sort((a, b) => {
-    if (sortOrder === "asc") return a[sortKey as keyof ExpensesTable] > b[sortKey as keyof ExpensesTable] ? 1 : -1;
-    return a[sortKey as keyof ExpensesTable] < b[sortKey as keyof ExpensesTable] ? 1 : -1;
-  });
+  // const sortedExpenses = [...expenses].sort((a, b) => {
+  //   if (sortOrder === "asc") return a[sortKey as keyof ExpensesTable] > b[sortKey as keyof ExpensesTable] ? 1 : -1;
+  //   return a[sortKey as keyof ExpensesTable] < b[sortKey as keyof ExpensesTable] ? 1 : -1;
+  // });
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString)
@@ -58,7 +58,7 @@ const AllExpensesPage = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {sortedExpenses.map((expense, index) => (
+              {expenses.map((expense, index) => (
                 <TableRow key={index}>
                   <TableCell>{expense.description}</TableCell>
                   <TableCell>{expense.category.name}</TableCell>
@@ -67,6 +67,7 @@ const AllExpensesPage = () => {
                 </TableRow>
               ))}
             </TableBody>
+            <TableFooter />
           </Table>
         </TableContainer>
       </div>

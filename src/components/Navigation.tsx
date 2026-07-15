@@ -9,7 +9,7 @@ import MobileBottomNavigation from './MobileBottomNav';
 import LoginBtn from './LoginBtn';
 import { useSession } from 'next-auth/react';
 
-const pages = [ {label: 'Home', href: '/'}, {label: 'Expenses', href: '/expenses'}, {label: 'Categories', href: '/categories'}];
+const pages = [{ label: 'Home', href: '/' }, { label: 'Expenses', href: '/expenses' }, { label: 'Categories', href: '/categories' }];
 
 export default function DesktopAppBar() {
   const { data: session } = useSession();
@@ -19,7 +19,7 @@ export default function DesktopAppBar() {
       <AppBar position="static">
         <Container maxWidth="xl">
           <Toolbar disableGutters>
-            <Box sx={{flexGrow: 1}}>
+            <Box sx={{ flexGrow: 1 }}>
               <Typography
                 variant="h6"
                 noWrap
@@ -40,25 +40,33 @@ export default function DesktopAppBar() {
             </Box>
             {session && (
               <>
-              <Box sx={{ display: { xs: 'none', md: 'flex' }, mx: 2 }}>
-                {pages.map((page) => (
-                  <Button
-                    href={page.href}
-                    key={page.label}
-                    sx={{ my: 2, color: 'white', display: 'block' }}
-                  >
-                    {page.label}
-                  </Button>
-                ))}
-              </Box>
-              <LoginBtn {...session}/>
+                <Box sx={{ display: { xs: 'none', md: 'flex' }, mx: 2 }}>
+                  {pages.map((page) => (
+                    <Button
+                      href={page.href}
+                      key={page.label}
+                      sx={{ my: 2, color: 'white', display: 'block' }}
+                    >
+                      {page.label}
+                    </Button>
+                  ))}
+                </Box>
+                <LoginBtn {...session} />
               </>
             )}
           </Toolbar>
         </Container>
       </AppBar>
       {session && (
-        <Box sx={{ display: { xs: "block", md: "none" } }}>
+        <Box sx={{
+          display: { xs: "block", md: "none" },
+          position: "fixed",
+          bottom: 0,
+          left: 0,
+          right: 0,
+          zIndex: 1300,
+          bgcolor: "background.paper",
+        }}>
           <MobileBottomNavigation />
         </Box>
       )}

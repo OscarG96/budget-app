@@ -1,16 +1,14 @@
 import { Expenses, User } from "@prisma/client";
 import { ExpensesRepository } from "../repositories/expensesRepo";
-
-interface GetRequestQuery {
-  limit?: number;
-  totalAmount?: boolean;
-  month?: number;
-  year?: number
-}
+import { GetExpensesQuery } from "../../schemas/schemas";
 
 export class ExpensesService {
-  static async getExpenses(user: User, query: GetRequestQuery) {
-    return ExpensesRepository.getAllExpenses(user, query)
+  static async getExpenses(user: User, query: GetExpensesQuery) {
+    if (query.totalAmount === false) {
+      return ExpensesRepository.getAllExpenses(user, query)
+    } else {
+      return ExpensesRepository.getTotalExpensesForMonth(user, query)
+    }
   }
 
   static async createExpense(expense: Expenses, user: User) {
