@@ -18,7 +18,7 @@ type ExpensesListProps = {
 const RecentExpenses: React.FC<ExpensesListProps> = ({ expenses, onAddExpense }) => {
 
   return (
-    <section className="px-4 py-1 pb-24">
+    <section className="px-4 py-1">
       <div className="container m-auto max-w-2xl pb-4">
         <div className='px-2 mb-4'>
           <div className="flex flex-row justify-between items-center mb-2">
@@ -46,20 +46,20 @@ const RecentExpenses: React.FC<ExpensesListProps> = ({ expenses, onAddExpense })
           </ul>
         </div>
         <div className="mt-4">
-          <Button
+          {/* <Button
             fullWidth
             variant='outlined'
             LinkComponent={Link}
             href='/expenses'
           >
             See all expenses
-          </Button>
-          {/* <Link
+          </Button> */}
+          <Link
             href="/expenses"
             className="block w-full rounded border border-blue-500 py-2 text-center"
           >
             See all expenses
-          </Link> */}
+          </Link>
         </div>
       </div>
     </section>
