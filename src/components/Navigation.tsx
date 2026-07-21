@@ -16,57 +16,93 @@ export default function DesktopAppBar() {
 
   return (
     <>
-      <AppBar position="static">
-        <Container maxWidth="xl">
-          <Toolbar disableGutters>
-            <Box sx={{ flexGrow: 1 }}>
-              <Typography
-                variant="h6"
-                noWrap
-                component="a"
-                href="#app-bar-with-responsive-menu"
-                sx={{
-                  mr: 2,
-                  display: { xs: 'flex', md: 'flex' },
-                  fontFamily: 'monospace',
-                  fontWeight: 700,
-                  letterSpacing: '.1rem',
-                  color: 'inherit',
-                  textDecoration: 'none',
-                }}
-              >
-                BudgetApp
-              </Typography>
-            </Box>
-            {session && (
-              <>
-                <Box sx={{ display: { xs: 'none', md: 'flex' }, mx: 2 }}>
-                  {pages.map((page) => (
-                    <Button
-                      href={page.href}
-                      key={page.label}
-                      sx={{ my: 2, color: 'white', display: 'block' }}
-                    >
-                      {page.label}
-                    </Button>
-                  ))}
-                </Box>
-                <LoginBtn {...session} />
-              </>
-            )}
-          </Toolbar>
-        </Container>
-      </AppBar>
+      <Box
+        sx={{
+          backgroundColor: {
+            xs: "#fff",
+            md: "primary.main",
+          },
+          paddingTop: "env(safe-area-inset-top)",
+        }}
+      >
+        <AppBar
+          position="static"
+          elevation={0}
+          sx={{
+            backgroundColor: {
+              xs: "#fff",
+              md: "primary.main",
+            },
+            color: {
+              xs: "text.primary",
+              md: "primary.contrastText",
+            },
+            boxShadow: "none",
+          }}
+        >
+          <Container maxWidth="xl">
+            <Toolbar disableGutters>
+              <Box sx={{ flexGrow: 1 }}>
+                <Typography
+                  variant="h6"
+                  noWrap
+                  component="a"
+                  href="#app-bar-with-responsive-menu"
+                  sx={{
+                    mr: 2,
+                    display: "flex",
+                    fontFamily: "monospace",
+                    fontWeight: 700,
+                    letterSpacing: ".1rem",
+                    color: "inherit",
+                    textDecoration: "none",
+                  }}
+                >
+                  BudgetApp
+                </Typography>
+              </Box>
+
+              {session && (
+                <>
+                  <Box
+                    sx={{
+                      display: { xs: "none", md: "flex" },
+                      mx: 2,
+                    }}
+                  >
+                    {pages.map((page) => (
+                      <Button
+                        href={page.href}
+                        key={page.label}
+                        sx={{
+                          my: 2,
+                          color: "inherit",
+                          display: "block",
+                        }}
+                      >
+                        {page.label}
+                      </Button>
+                    ))}
+                  </Box>
+                  <LoginBtn {...session} />
+                </>
+              )}
+            </Toolbar>
+          </Container>
+        </AppBar>
+      </Box>
       {session && (
-        <Box sx={{
-          display: { xs: "block", md: "none" },
-          position: "fixed",
-          bottom: 0,
-          left: 0,
-          right: 0,
-          // zIndex: 1300,
-          bgcolor: "background.paper",
-        }}>
+        <Box
+          sx={{
+            display: { xs: "block", md: "none" },
+            position: "fixed",
+            bottom: 0,
+            left: 0,
+            right: 0,
+            backgroundColor: "#fff",
+            paddingBottom: "env(safe-area-inset-bottom)",
+          }}
+        >
           <MobileBottomNavigation />
         </Box>
       )}
