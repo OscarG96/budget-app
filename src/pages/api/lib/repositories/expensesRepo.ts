@@ -1,4 +1,4 @@
-import { GetExpensesQuery } from "../../schemas/schemas";
+import { GetCategoriesSpentSchemaQuery, GetExpensesQuery } from "../../schemas/schemas";
 import { prisma } from "../prisma";
 import type { Expenses, User } from "@prisma/client";
 
@@ -58,6 +58,26 @@ export class ExpensesRepository {
     });
 
     return result._sum.amount ?? 0;
+  }
+
+  static async getTotalExpensesGroupByMonth(user: User, queryParams: GetCategoriesSpentSchemaQuery) {
+    const { year, month } = queryParams;
+    const startOfMonth = new Date(Date.UTC(year, month - 1, 1));
+    const startOfNextMonth = new Date(Date.UTC(year, month, 1));
+    
+    return prisma.expenses.groupBy({
+      by: ["categoryId"],
+      _sum: {
+        amount: true,
+      },
+      where: {
+        authorId: user.id,
+        date: {
+          gte: startOfMonth,
+          lt: startOfNextMonth,
+        },
+      },
+    });
   }
 }
 

@@ -4,11 +4,11 @@ import { GetExpensesQuery } from "../../schemas/schemas";
 
 export class ExpensesService {
   static async getExpenses(user: User, query: GetExpensesQuery) {
-    if (query.totalAmount === false) {
-      return ExpensesRepository.getAllExpenses(user, query)
-    } else {
-      return ExpensesRepository.getTotalExpensesForMonth(user, query)
-    }
+    return ExpensesRepository.getAllExpenses(user, query);
+  }
+
+  static async getExpensesTotalAmount(user: User, query: GetExpensesQuery) {
+    return ExpensesRepository.getTotalExpensesForMonth(user, query);
   }
 
   static async createExpense(expense: Expenses, user: User) {

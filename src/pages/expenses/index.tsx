@@ -1,25 +1,20 @@
-import { ArrowsUpDownIcon } from '@heroicons/react/24/outline'
 import { Expense, ExpenseWithCategory } from '@/types/types';
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router';
 import Spinner from '@/components/Spinner';
-import AddExpense from '@/components/AddExpense';
 import { fetchExpenses } from '@/utils/api/expensesApi';
 import { Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TableRow } from '@mui/material';
+import { ExpenseDrawer } from '@/components/ExpenseDrawer';
 
 interface ExpensesTable extends Expense {
   category: { name: string }
 }
 
 const AllExpensesPage = () => {
-
-  const router = useRouter()
-
-  const [sortKey, setSortKey] = useState("date");
-  const [sortOrder, setSortOrder] = useState("desc");
   const [expenses, setExpenses] = useState<ExpenseWithCategory[]>([]);
   const [loading, setLoading] = useState(true);
-  const [isFormOpen, setIsFormOpen] = useState(false)
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [expenseToEdit, setExpenseToEdit] = useState<ExpenseWithCategory | null>(null);
 
   let currentDate = new Date()
   let currentMonth = currentDate.getMonth() + 1
@@ -29,10 +24,14 @@ const AllExpensesPage = () => {
     fetchExpenses(currentMonth, currentYear, 1000, false).then(setExpenses).catch(console.error).finally(() => setLoading(false))
   }, [currentMonth, currentYear]);
 
-  // const sortedExpenses = [...expenses].sort((a, b) => {
-  //   if (sortOrder === "asc") return a[sortKey as keyof ExpensesTable] > b[sortKey as keyof ExpensesTable] ? 1 : -1;
-  //   return a[sortKey as keyof ExpensesTable] < b[sortKey as keyof ExpensesTable] ? 1 : -1;
-  // });
+  const handleRowClick = (expense: ExpenseWithCategory) => {
+    setExpenseToEdit(expense);
+    setDrawerOpen(true);
+  }
+
+  const handleExpenseCreated = (expense: ExpenseWithCategory) => {
+    setExpenses(prev => [expense, ...prev]);
+  };
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString)
@@ -59,7 +58,10 @@ const AllExpensesPage = () => {
             </TableHead>
             <TableBody>
               {expenses.map((expense, index) => (
-                <TableRow key={index}>
+                <TableRow key={index}
+                  hover
+                  onClick={() => handleRowClick(expense)}
+                  sx={{ cursor: "pointer" }}>
                   <TableCell>{expense.description}</TableCell>
                   <TableCell>{expense.category.name}</TableCell>
                   <TableCell>${expense.amount}</TableCell>
@@ -71,6 +73,15 @@ const AllExpensesPage = () => {
           </Table>
         </TableContainer>
       </div>
+      {expenseToEdit && (
+      <ExpenseDrawer
+        open={drawerOpen}
+        onClose={() => setDrawerOpen(false)}
+        onCreated={handleExpenseCreated}
+        expenseToEdit={expenseToEdit}
+      >
+      </ExpenseDrawer>
+      )}
     </section>
   )
 }

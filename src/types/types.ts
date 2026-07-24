@@ -46,3 +46,9 @@ export type User = {
   email: string;
   password: string;
 }
+
+export type CategorySpending = {
+  id: number;
+  name: string;
+  totalSpent: number;
+};
