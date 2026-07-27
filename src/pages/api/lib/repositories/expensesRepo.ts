@@ -62,8 +62,16 @@ export class ExpensesRepository {
 
   static async getTotalExpensesGroupByMonth(user: User, queryParams: GetCategoriesSpentSchemaQuery) {
     const { year, month } = queryParams;
-    const startOfMonth = new Date(Date.UTC(year, month - 1, 1));
-    const startOfNextMonth = new Date(Date.UTC(year, month, 1));
+    const filters: any = {};
+
+    if (month && year) {
+      const startOfMonth = new Date(Date.UTC(year, month - 1, 1));
+      const startOfNextMonth = new Date(Date.UTC(year, month, 1));
+      filters.date = {
+        gte: startOfMonth, // Greater than or equal to the first day of the month
+        lt: startOfNextMonth, // Less than the first day of the next month
+      }
+    }
     
     return prisma.expenses.groupBy({
       by: ["categoryId"],
@@ -72,10 +80,7 @@ export class ExpensesRepository {
       },
       where: {
         authorId: user.id,
-        date: {
-          gte: startOfMonth,
-          lt: startOfNextMonth,
-        },
+        ...filters,
       },
     });
   }
