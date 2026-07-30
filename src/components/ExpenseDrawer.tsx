@@ -1,4 +1,4 @@
-import { Category } from "@/types/types";
+import { Category, ExpenseWithCategory } from "@/types/types";
 import { fetchCategories } from "@/utils/api/categoriesApi";
 import { Autocomplete, Box, Button, Drawer, InputAdornment, Stack, TextField } from "@mui/material"
 import { useEffect, useState } from "react";
@@ -6,18 +6,26 @@ import CloseIcon from '@mui/icons-material/Close';
 import { createExpense } from "@/utils/api/expensesApi";
 import { toast } from "react-toastify";
 
+interface ExpenseFormState {
+  amount: string;
+  description: string;
+  categoryId: string;
+  date: string;
+}
+
 interface ExpenseDrawerProps {
   open: boolean
   onClose: () => void
   onCreated: (res: any) => void
+  expenseToEdit?: ExpenseWithCategory | null
 }
 
-export const ExpenseDrawer: React.FC<ExpenseDrawerProps> = ({ open, onClose, onCreated }) => {
+export const ExpenseDrawer: React.FC<ExpenseDrawerProps> = ({ open, onClose, onCreated, expenseToEdit }) => {
   const [loading, setLoading] = useState(true);
-  const [expense, setExpense] = useState({
+  const [expense, setExpense] = useState<ExpenseFormState>({
     amount: "",
     description: "",
-    categoryId: "0",    
+    categoryId: "0",
     date: new Date().toISOString().split("T")[0]
   })
   const [categories, setCategories] = useState<Category[]>([])
@@ -70,6 +78,19 @@ export const ExpenseDrawer: React.FC<ExpenseDrawerProps> = ({ open, onClose, onC
       .finally(() => setLoading(false))
   }, [setCategories, setExpense])
 
+  useEffect(() => {
+    if (expenseToEdit) {
+      setExpense({
+        amount: expenseToEdit.amount.toString(),
+        description: expenseToEdit.description,
+        categoryId: expenseToEdit.categoryId.toString(),
+        date: new Date(expenseToEdit.date).toISOString().split("T")[0],
+      });
+    } else {
+      clearForm()
+    }
+  }, [expenseToEdit])
+
   return (
     <Drawer
       anchor='bottom'
@@ -79,7 +100,7 @@ export const ExpenseDrawer: React.FC<ExpenseDrawerProps> = ({ open, onClose, onC
       <div className="flex justify-center h-full">
         <div className="w-full max-w-2xl bg-white p-6 rounded-lg">
           <form onSubmit={submitForm} className="w-full">
-            <h2 className="text-3xl text-center font-semibold mb-6">Add Expense</h2>
+            <h2 className="text-3xl text-center font-semibold mb-6">{expenseToEdit ? "Edit expense" : "Add Expense"}</h2>
             <button
               onClick={handleDrawerClose}
               type='button'
@@ -144,7 +165,7 @@ export const ExpenseDrawer: React.FC<ExpenseDrawerProps> = ({ open, onClose, onC
                 variant="contained"
                 type="submit"
               >
-                Add Expense
+                {expenseToEdit ? "Update" : "Add"}
               </Button>
             </Stack>
           </form>

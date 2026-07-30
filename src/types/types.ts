@@ -22,6 +22,11 @@ export type Category = {
   createdAt: Date;
 }
 
+export type CategoryWithTotalSpent = Category & {
+  totalSpent: number;
+}
+
+
 export type BudgetWithCategory = Budget & {
   category: Category
 }
@@ -45,4 +50,16 @@ export type User = {
   lastName: string;
   email: string;
   password: string;
+}
+
+export type CategorySpending = {
+  id: number;
+  name: string;
+  totalSpent: number;
+};
+
+export type DashboardResponse = {
+  totalExpenses: number;
+  categories: CategoryWithTotalSpent[];
+  expenses: ExpenseWithCategory[];
 }

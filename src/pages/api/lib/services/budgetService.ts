@@ -3,10 +3,6 @@ import { BudgetRepo } from "../repositories/budgetRepo"
 import { CategoriesRepo } from "../repositories/categoriesRepo"
 import { BudgetWithCategory } from "@/types/types"
 import type { CreateBudget, GetBudgetsQuery } from "../../schemas/schemas";
-import { z } from "zod";
-
-// type GetBudgetsQuery = z.infer<typeof BudgetQuerySchema>;
-// import type CreateBudget = z.infer<typeof CreateBudgetSchema>
 
 export class BudgetService {
   static async getUserBudgets(user: User, query: GetBudgetsQuery) {

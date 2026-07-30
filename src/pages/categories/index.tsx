@@ -1,12 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Autocomplete, Button, TextField } from '@mui/material';
-import AddIcon from '@mui/icons-material/Add';
-import { PlusIcon } from '@heroicons/react/24/solid';
 import { createBudget, fetchBudgets } from '@/utils/api/budgetApi';
 import { fetchCategories } from '@/utils/api/categoriesApi';
 import { formatCurrency } from '@/utils/formatters/currency';
 import Spinner from '@/components/Spinner';
-import AddExpense from '@/components/AddExpense';
 import { Category, BudgetWithCategory } from '@/types/types';
 import { CategoriesDialog } from '@/components/CategoriesDrawer';
 

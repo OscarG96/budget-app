@@ -1,33 +1,27 @@
+import { GetCategoriesSpentSchemaQuery, GetExpensesQuery } from "../../schemas/schemas";
 import { prisma } from "../prisma";
-import type { Expenses, User } from "@prisma/client"; 
-
-interface GetRequestQuery {
-  limit?: number;
-  totalAmount?: boolean;
-  month?: number;
-  year?: number
-}
+import type { Expenses, User } from "@prisma/client";
 
 export class ExpensesRepository {
-  static async getAllExpenses(user: User, queryParams: GetRequestQuery) {
+  static async getAllExpenses(user: User, queryParams: GetExpensesQuery) {
+    const { year, month } = queryParams;
+    const filters: any = {};
 
-    const filters: any = {}; 
-    
-    if (queryParams.month && queryParams.year) {
-      const startOfMonth = new Date(queryParams.year, queryParams.month - 1, 1); // First day of the month
-      const endOfMonth = new Date(queryParams.year, queryParams.month, 0); // Last day of the month
+    if (month && year) {
+      const startOfMonth = new Date(Date.UTC(year, month - 1, 1));
+      const startOfNextMonth = new Date(Date.UTC(year, month, 1));
       filters.date = {
         gte: startOfMonth, // Greater than or equal to the first day of the month
-        lt: endOfMonth, // Less than the first day of the next month
+        lt: startOfNextMonth, // Less than the first day of the next month
       }
     }
 
     return prisma.expenses.findMany({
       orderBy: {
-        id: "desc", // Sort by highest ID first
+        id: "desc", 
       },
       where: { authorId: user.id, ...filters },
-      take: Number(queryParams.limit) || 10,
+      take: Number(queryParams.limit) || 100,
       include: {
         category: true
       }
@@ -43,6 +37,52 @@ export class ExpensesRepository {
         authorId: user.id
       }
     })
+  }
+
+  static async getTotalExpensesForMonth(user: User, queryParams: GetExpensesQuery) {
+    const { year, month } = queryParams;
+    const startOfMonth = new Date(Date.UTC(year, month - 1, 1));
+    const startOfNextMonth = new Date(Date.UTC(year, month, 1));
+    
+    const result = await prisma.expenses.aggregate({
+      _sum: {
+        amount: true,
+      },
+      where: {
+        authorId: user.id,
+        date: {
+          gte: startOfMonth,
+          lt: startOfNextMonth,
+        },
+      },
+    });
+
+    return result._sum.amount ?? 0;
+  }
+
+  static async getTotalExpensesGroupByMonth(user: User, queryParams: GetCategoriesSpentSchemaQuery) {
+    const { year, month } = queryParams;
+    const filters: any = {};
+
+    if (month && year) {
+      const startOfMonth = new Date(Date.UTC(year, month - 1, 1));
+      const startOfNextMonth = new Date(Date.UTC(year, month, 1));
+      filters.date = {
+        gte: startOfMonth, // Greater than or equal to the first day of the month
+        lt: startOfNextMonth, // Less than the first day of the next month
+      }
+    }
+    
+    return prisma.expenses.groupBy({
+      by: ["categoryId"],
+      _sum: {
+        amount: true,
+      },
+      where: {
+        authorId: user.id,
+        ...filters,
+      },
+    });
   }
 }
 

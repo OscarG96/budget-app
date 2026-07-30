@@ -1,9 +1,15 @@
 {
   "compilerOptions": {
+    "types": [
+      // Other types...
+      // This allows Serwist to type `window.serwist`.
+      "@serwist/next/typings"
+    ],
     "lib": [
       "dom",
       "dom.iterable",
-      "esnext"
+      "esnext",
+      "webworker"
     ],
     "allowJs": true,
     "skipLibCheck": true,
@@ -11,25 +17,28 @@
     "noEmit": true,
     "esModuleInterop": true,
     "module": "esnext",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
+    "baseUrl": ".",
     "paths": {
       "@/*": [
         "./src/*"
       ]
     },
-    "target": "es5",
-    "forceConsistentCasingInFileNames": true
+    "target": "es2017",
+    "forceConsistentCasingInFileNames": true,
   },
   "include": [
     "next-env.d.ts",
     "**/*.ts",
-    "**/*.tsx"
-  ],
+    "**/*.tsx",
+    "src/global.d.ts"
+, "sw.ts"  ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "public/sw.js"
   ]
 }
