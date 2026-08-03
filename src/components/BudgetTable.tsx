@@ -17,6 +17,7 @@ export const BudgetTable: React.FC<BudgetTableProps> = ({ budgets }) => {
       <div className="container m-auto max-w-2xl">
         {budgets.map((budget, index) => (
           <CategoryBudget
+            key={index}
             name={budget.category.name}
             spent={sumExpenses(budget.category.expenses)}
             budget={budget.monthlyLimit}
