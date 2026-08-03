@@ -12,10 +12,17 @@ export class BudgetRepo {
       })
   }
 
-  static async createBudget(user: User, budget: CreateBudget) {
-    return prisma.budget.create({
-      data: { ...budget, authorId: user.id}
-    })
+  static async upsertBudget(user: User, budget: CreateBudget) {
+    return prisma.budget.upsert({
+      where: {
+        authorId_categoryId: {
+          authorId: user.id,
+          categoryId: budget.categoryId,
+        },
+      },
+      create: { ...budget, authorId: user.id },
+      update: { monthlyLimit: budget.monthlyLimit },
+    });
   }
 
   static async getBudgetWithExpenses(user: User, startDate: Date, endDate: Date) {

@@ -23,6 +23,6 @@ export class BudgetService {
       // existingCategory = await CategoriesRepo.createCategory(user, budget.category.name )
       throw "Category does not exist"
     }
-    return BudgetRepo.createBudget(user, { monthlyLimit, categoryId: existingCategory.id })
+    return BudgetRepo.upsertBudget(user, { monthlyLimit, categoryId: existingCategory.id })
   }
 }

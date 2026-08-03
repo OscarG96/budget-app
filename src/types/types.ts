@@ -13,6 +13,7 @@ export type Budget = {
   categoryId: number;
   authorId: number;
   monthlyLimit: number;
+  existing?: boolean
 }
 
 export type Category = {

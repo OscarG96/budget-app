@@ -13,11 +13,19 @@ export default function MobileBottomNavigation() {
   const pathname = usePathname();
 
   return (
-    <Paper sx={{ position: 'fixed', bottom: 0, left: 0, right: 0 }} elevation={3}>
+    <Paper
+      sx={{
+        width: '100%',
+        paddingBottom: 'env(safe-area-inset-bottom, 0px)',
+      }}
+      elevation={3}
+    >
       <BottomNavigation
         value={pathname}
-        className=" bottom-0 left-0 right-0"
         showLabels
+        sx={{
+          minHeight: 64,
+        }}
       >
         <BottomNavigationAction
           component={Link}
