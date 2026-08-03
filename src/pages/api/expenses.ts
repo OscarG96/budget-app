@@ -10,7 +10,7 @@ type Handler = (req: AuthenticatedRequest, res: NextApiResponse) => Promise<void
 
 interface AuthenticatedRequest extends NextApiRequest {
   session: Session;
-  user?: User;
+  user: User;
 }
 
 const handlers: Record<HttpMethod, Handler> = {
@@ -34,16 +34,13 @@ const handlers: Record<HttpMethod, Handler> = {
   },
   POST: async (req: AuthenticatedRequest, res: NextApiResponse) => {
     const expense = req.body;
-    if (req.user) {
-      const expenseCreated = await ExpensesService.createExpense(expense, req.user);
-      res.status(200).send(expenseCreated);
-    } else {
-      res.status(400).json({ message: "User not found" });
-    }
-    res.status(201).json({ message: "POST request handled" });
+    const expenseCreated = await ExpensesService.createExpense(expense, req.user);
+    res.status(201).json({ message: "Expense created", expense: expenseCreated });
   },
   PUT: async (req, res) => {
-    res.status(200).json({ message: "PUT request handled" });
+    const expenseToUpdate = req.body
+    const expenseUpdated = await ExpensesService.updateExpense(expenseToUpdate, req.user);
+    res.status(200).json({ message: "Expense updated", expense: expenseUpdated });
   },
   DELETE: async (req, res) => {
     res.status(200).json({ message: "DELETE request handled" });
@@ -52,6 +49,9 @@ const handlers: Record<HttpMethod, Handler> = {
 
 export default async function handler(req: AuthenticatedRequest, res: NextApiResponse) {
   req.user = await UsersService.getUserSession(req, res);
+  if (!req.user) {
+    return res.status(403).send({message: "Unauthorized"})
+  }
   const method = req.method as HttpMethod;
   if (method && handlers[method]) {
     await handlers[method](req, res);

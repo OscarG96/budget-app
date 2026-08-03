@@ -8,9 +8,10 @@ import { fetchExpenses, fetchExpensesTotalAmount } from "@/utils/api/expensesApi
 import { ExpenseDrawer } from "@/components/ExpenseDrawer";
 import { CategoriesTable } from "@/components/CategoriesTable";
 import { fetchDashboardData } from "@/utils/api/dashboardApi";
+import { CategoryBudget } from "@/components/CategoryBudget";
 
 interface ExpensesTable extends Expense {
-  category: {name: string}
+  category: { name: string }
 }
 
 export default function Dashboard() {
@@ -23,20 +24,8 @@ export default function Dashboard() {
   const currentDate = new Date()
   const currentMonth = currentDate.getMonth() + 1
   const currentYear = currentDate.getFullYear()
-  const monthString = currentDate.toLocaleString("es-MX", { month: "long" });
+  const monthString = currentDate.toLocaleString("en-US", { month: "long" });
   const monthCapitalized = monthString.charAt(0).toUpperCase() + monthString.slice(1)
-
-  // useEffect(() => {
-  //   fetchBudgetswithExpenses(currentMonth, currentYear).then(setbudgetWithCategoryAndExpenses).catch(console.error);
-  // }, [currentMonth, currentYear]);
-
-  // useEffect(() => {
-  //   fetchExpenses(currentMonth, currentYear, 10, false).then(setExpenses).catch(console.error).finally(() => setLoading(false))
-  // }, [currentMonth, currentYear]);
-
-  // useEffect(() => {
-  //   fetchExpensesTotalAmount(currentMonth, currentYear, 1000, true).then(setTotalExpensesAmount).catch(console.error).finally(() => setLoading(false))
-  // }, [currentMonth, currentYear]);
 
   useEffect(() => {
     fetchDashboardData(currentMonth, currentYear).then((res) => {
@@ -45,12 +34,6 @@ export default function Dashboard() {
       setExpenses(res.expenses)
     }).catch(console.error).finally(() => setLoading(false))
   }, [currentMonth, currentYear]);
-
-  // useEffect(() => {
-  //   fetchCategoriesSpent(currentYear, currentMonth).then((res) => {
-  //     console.log(res);
-  //   }).catch(console.error).finally(() => setLoading(false))
-  // }, [currentMonth, currentYear]);
 
   const handleExpenseCreated = (expense: ExpenseWithCategory) => {
     setExpenses(prev => [expense, ...prev]);
@@ -69,14 +52,13 @@ export default function Dashboard() {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
-        {/* <BudgetTable budgets={budgetWithCategoryAndExpenses} /> */}
-        <CategoriesTable categories={categoriesWithTotalSpent}/>
-        <RecentExpenses 
+        <CategoriesTable categories={categoriesWithTotalSpent} />
+        <RecentExpenses
           expenses={expenses}
           onAddExpense={() => setDrawerOpen(true)}
         />
         <ExpenseDrawer
-          open={drawerOpen} 
+          open={drawerOpen}
           onClose={() => setDrawerOpen(false)}
           onCreated={handleExpenseCreated}
           expenseToEdit={null}

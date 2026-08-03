@@ -1,3 +1,4 @@
+import { Expense } from "@/types/types";
 import { GetCategoriesSpentSchemaQuery, GetExpensesQuery } from "../../schemas/schemas";
 import { prisma } from "../prisma";
 import type { Expenses, User } from "@prisma/client";
@@ -28,7 +29,7 @@ export class ExpensesRepository {
     });
   }
 
-  static async createExpense(expense: Expenses, user: User) {
+  static async createExpense(expense: Expense, user: User) {
     return prisma.expenses.create({
       data: {
         amount: expense.amount,
@@ -38,6 +39,20 @@ export class ExpensesRepository {
       }
     })
   }
+  
+  static async updateExpense(expense: Expense, user: User) {
+    return prisma.expenses.update({
+      where: {
+        id: expense.id,
+      },
+      data: {
+        amount: expense.amount,
+        description: expense.description,
+        categoryId: expense.categoryId,
+        authorId: user.id
+      }
+    })
+  } 
 
   static async getTotalExpensesForMonth(user: User, queryParams: GetExpensesQuery) {
     const { year, month } = queryParams;

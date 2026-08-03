@@ -10,8 +10,14 @@ export const fetchExpensesTotalAmount = (month?: number, year?: number, limit?: 
 export const fetchExpensesTotal = (month?: number, year?: number, limit?: number, totalAmount?: boolean) =>
   http<Number>(`/api/expenses?limit=${limit}&month=${month}&year=${year}&totalAmount=${totalAmount}`)
 
-export const createExpense = (expense: Partial<Expense>) =>
-  http<Expense>(`/api/expenses`, {
+export const createExpenseApi = (expense: Partial<Expense>) =>
+  http<{ message: string; expense: Expense }>(`/api/expenses`, {
     method: 'POST',
     body: expense
-  })
+  });
+
+export const updateExpenseApi = (expense: Partial<Expense>) =>
+  http<{ message: string; expense: Expense }>(`/api/expenses`, {
+    method: 'PUT',
+    body: expense
+  });

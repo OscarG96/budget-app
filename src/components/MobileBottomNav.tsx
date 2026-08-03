@@ -37,9 +37,9 @@ export default function MobileBottomNavigation() {
 
         <BottomNavigationAction
           component={Link}
-          value="/categories"
-          href="/categories"
-          label="Categories"
+          value="/budget"
+          href="/budget"
+          label="Budget"
           icon={<CategoryIcon />}
         />
       </BottomNavigation>
