@@ -9,7 +9,7 @@ import MobileBottomNavigation from './MobileBottomNav';
 import LoginBtn from './LoginBtn';
 import { useSession } from 'next-auth/react';
 
-const pages = [{ label: 'Home', href: '/' }, { label: 'Expenses', href: '/expenses' }, { label: 'Categories', href: '/categories' }];
+const pages = [{ label: 'Home', href: '/' }, { label: 'Expenses', href: '/expenses' }, { label: 'Budget', href: '/budget' }];
 
 export default function DesktopAppBar() {
   const { data: session } = useSession();
@@ -100,7 +100,6 @@ export default function DesktopAppBar() {
             left: 0,
             right: 0,
             backgroundColor: "#fff",
-            paddingBottom: "env(safe-area-inset-bottom)",
           }}
         >
           <MobileBottomNavigation />

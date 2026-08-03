@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Autocomplete, Button, TextField } from '@mui/material';
-import { createBudget, fetchBudgets, fetchBudgetswithExpenses } from '@/utils/api/budgetApi';
+import { createOrUpdateBudget, fetchBudgetswithExpenses } from '@/utils/api/budgetApi';
 import { fetchCategories } from '@/utils/api/categoriesApi';
-import { formatCurrency } from '@/utils/formatters/currency';
 import Spinner from '@/components/Spinner';
 import { Category, BudgetWithCategory, BudgetWithCategoryAndExpenses } from '@/types/types';
 import { CategoriesDialog } from '@/components/CategoriesDrawer';
@@ -48,6 +47,18 @@ const BudgetPage = () => {
       .catch(console.error);
   }, []);
 
+  const handleCategoryChange = (_: unknown, value: Category | null) => {
+    const categoryId = value?.id?.toString() || "";
+    const existingBudget = budgetWithCategoryAndExpenses.find(
+      (item) => item.category.id === value?.id
+    );
+
+    setBudget({
+      categoryId,
+      monthlyLimit: existingBudget ? existingBudget.monthlyLimit.toString() : "",
+    });
+  };
+
   const submitForm = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -57,7 +68,7 @@ const BudgetPage = () => {
     }
 
     try {
-      await createBudget({
+      await createOrUpdateBudget({
         categoryId: Number(budget.categoryId),
         monthlyLimit: parseFloat(budget.monthlyLimit),
       });
@@ -88,9 +99,6 @@ const BudgetPage = () => {
           <form onSubmit={submitForm} className="mt-6 space-y-4">
             <div className="flex flex-row justify-between items-baseline">
               <h2 className="text-lg text-center font-semibold">Add a budget</h2>
-              {/* <Button size="small" variant="outlined" onClick={() => setDrawerOpen(true)} startIcon={<AddIcon />}>
-              Category
-            </Button> */}
             </div>
             <Autocomplete
               disablePortal
@@ -101,12 +109,7 @@ const BudgetPage = () => {
                   (cat) => cat.id === parseInt(budget.categoryId)
                 ) || null
               }
-              onChange={(_, value) =>
-                setBudget({
-                  ...budget,
-                  categoryId: value?.id?.toString() || "",
-                })
-              }
+              onChange={handleCategoryChange}
               sx={{ width: "100%" }}
               renderInput={(params) => (
                 <TextField {...params} label="Select a category" />
@@ -126,7 +129,7 @@ const BudgetPage = () => {
             />
 
             <Button fullWidth variant="contained" type="submit">
-              Add Budget
+              Add / Update Budget
             </Button>
           </form>
         </div>
