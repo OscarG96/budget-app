@@ -3,7 +3,7 @@ import { fetchCategories } from "@/utils/api/categoriesApi";
 import { Autocomplete, Box, Button, Drawer, InputAdornment, Stack, TextField } from "@mui/material"
 import { useEffect, useState } from "react";
 import CloseIcon from '@mui/icons-material/Close';
-import { createExpense } from "@/utils/api/expensesApi";
+import { createExpenseApi, updateExpenseApi } from "@/utils/api/expensesApi";
 import { toast } from "react-toastify";
 
 interface ExpenseFormState {
@@ -12,6 +12,8 @@ interface ExpenseFormState {
   categoryId: string;
   date: string;
 }
+
+type ExpenseRequest = Omit<ExpenseWithCategory, "id" | "authorId" | "createdAt" | "category">;
 
 interface ExpenseDrawerProps {
   open: boolean
@@ -29,30 +31,38 @@ export const ExpenseDrawer: React.FC<ExpenseDrawerProps> = ({ open, onClose, onC
     date: new Date().toISOString().split("T")[0]
   })
   const [categories, setCategories] = useState<Category[]>([])
-  const submitForm = (e: React.FormEvent) => {
-    e.preventDefault()
-    const parsedExpense = {
-      ...expense,
-      amount: parseFloat(expense.amount),
-      categoryId: parseInt(expense.categoryId),
-      // date: expense.date.toString()
-    }
 
-    createExpense(parsedExpense).then((res) => {
-      toast.success("Expense added successfully")
-      const categoryData = categories.find(cat => cat.id === res.categoryId)
-      if (categoryData) {
-        const expenseWithCategory = {
-          ...res,
-          category: categoryData
-        }
-        onCreated(expenseWithCategory)
+  const submitForm = async (e: React.FormEvent) => {
+    e.preventDefault()
+
+    const parsedExpense: ExpenseRequest = {
+      amount: parseFloat(expense.amount),
+      description: expense.description,
+      categoryId: parseInt(expense.categoryId),
+      date: expense.date
+    };
+
+    try {
+      let response;
+      if (expenseToEdit) {
+        let payload = { ...expenseToEdit, ...parsedExpense };
+        response = await updateExpenseApi(payload)
+      } else {
+        // await saveExpense(parsedExpense, "added")
+        response = await createExpenseApi(parsedExpense);
+      }
+
+      toast.success(`Success`)
+      console.log("response", response);
+      if (response) {
+        const categoryData = categories.find(cat => cat.id === response.expense.categoryId)
+        onCreated({ ...response.expense, category: categoryData })
       }
       clearForm()
-    }).catch((err) => {
-      toast.error("Failed to add expense")
+    } catch (err) {
+      toast.error(`There was an error`)
       console.log(err)
-    })
+    }
   }
 
   const handleDrawerClose = () => {

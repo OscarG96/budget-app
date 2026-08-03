@@ -1,6 +1,7 @@
-import { Expenses, User } from "@prisma/client";
+import { User } from "@prisma/client";
 import { ExpensesRepository } from "../repositories/expensesRepo";
 import { GetExpensesQuery } from "../../schemas/schemas";
+import { Expense } from "@/types/types";
 
 export class ExpensesService {
   static async getExpenses(user: User, query: GetExpensesQuery) {
@@ -11,7 +12,11 @@ export class ExpensesService {
     return ExpensesRepository.getTotalExpensesForMonth(user, query);
   }
 
-  static async createExpense(expense: Expenses, user: User) {
+  static async createExpense(expense: Expense, user: User) {
     return ExpensesRepository.createExpense(expense, user)
+  }
+
+  static async updateExpense(expense: Expense, user: User) {
+    return ExpensesRepository.updateExpense(expense, user)
   }
 }
