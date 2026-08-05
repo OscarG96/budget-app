@@ -35,6 +35,7 @@ export class ExpensesRepository {
         amount: expense.amount,
         description: expense.description,
         categoryId: expense.categoryId,
+        date: new Date(expense.date),
         authorId: user.id
       }
     })

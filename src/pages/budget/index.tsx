@@ -128,9 +128,15 @@ const BudgetPage = () => {
               inputProps={{ step: "0.01" }}
             />
 
-            <Button fullWidth variant="contained" type="submit">
+            {/* <Button fullWidth variant="contained" type="submit">
               Add / Update Budget
-            </Button>
+            </Button> */}
+            <button
+              className='block w-full rounded border border-blue-500 py-2 text-center'
+              type='submit'
+            >
+              Add / Update Budget
+            </button>
           </form>
         </div>
         <CategoriesDialog
