@@ -16,7 +16,7 @@ model User {
   categories Categories[]
   expenses  Expenses[]
   budgets   Budget[]
-  plannedExpenses PlannedExpenses[]
+  recurringExpense RecurringExpense[]
   incomes   Income[]
   savings   Savings[]
   
@@ -57,12 +57,12 @@ model Categories {
   createdAt       DateTime @default(now())
   budget          Budget[]
   expenses        Expenses[]
-  plannedExpenses PlannedExpenses[]
+  recurringExpense RecurringExpense[]
 
   @@map("categories")
 }
 
-model PlannedExpenses {
+model RecurringExpense {
   id              Int    @id @default(autoincrement())
   author          User @relation(fields: [authorId], references: [id])
   authorId        Int
@@ -70,13 +70,12 @@ model PlannedExpenses {
   categoryId      Int
   description     String
   amount          Int
-  dueDate         DateTime
-  month           Int
-  year            Int
+  frequency       String
+  nextDate        DateTime
+  active          Boolean             @default(true)
   createdAt       DateTime @default(now())
   
-  @@unique([authorId, categoryId, month, year])
-  @@map("panned_expenses")
+  @@map("recurring_expenses")
 }
 
 model Income {

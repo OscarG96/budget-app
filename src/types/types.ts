@@ -8,6 +8,26 @@ export type Expense = {
   createdAt: Date;
 }
 
+export type RecurrenceFrequency =
+  | 'DAILY'
+  | 'WEEKLY'
+  | 'MONTHLY'
+  | 'YEARLY';
+
+export type RecurringExpense = {
+  id: number;
+  authorId: number;
+  categoryId: number;
+  description: string;
+  amount: number;
+  frequency: RecurrenceFrequency;
+  nextDate: Date;
+  active: boolean;
+  createdAt: Date;
+};
+
+
+
 export type Budget = {
   id: number;
   categoryId: number;
