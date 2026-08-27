@@ -23,13 +23,15 @@ const handlers: Record<HttpMethod, Handler> = {
       });
     }
     const query = parsed.data;
-    const [categories, expenses, totalExpenses] =  await Promise.all([
-      CategoriesService.getCategorySpending(req.user, query),
-      ExpensesService.getExpenses(req.user, query),
-      ExpensesService.getExpensesTotalAmount(req.user, query)
-    ]);
+    // const [categories, expenses, totalExpenses] =  await Promise.all([
+    //   CategoriesService.getCategorySpending(req.user, query),
+    //   ExpensesService.getExpenses(req.user, query),
+    //   ExpensesService.getExpensesTotalAmount(req.user, query)
+    // ]);
+    //Expenses from month with categories
+    const data = await ExpensesService.getExpensesDashboard(req.user, query);
 
-    res.status(200).send({categories, expenses, totalExpenses});
+    res.status(200).send(data);
   },
   POST: async (req: NextApiRequest, res: NextApiResponse) => {
     const data = req.body;

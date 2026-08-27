@@ -29,9 +29,10 @@ export default function Dashboard() {
 
   useEffect(() => {
     fetchDashboardData(currentMonth, currentYear).then((res) => {
-      setTotalExpensesAmount(res.totalExpenses);
-      setCategoriesWithTotalSpent(res.categories);
-      setExpenses(res.expenses)
+      setTotalExpensesAmount(res.totalAmount);
+      setCategoriesWithTotalSpent(res.categoriesWithExpenses);
+      setExpenses(res.lastFiveExpenses)
+      console.log(res);
     }).catch(console.error).finally(() => setLoading(false))
   }, [currentMonth, currentYear]);
 
