@@ -80,7 +80,7 @@ function Row({ category }: RowProps) {
         <TableCell component="th" scope="row">
           {category.name}
         </TableCell>
-        <TableCell align="right">{category.totalSpent}</TableCell>
+        <TableCell align="right">${category.totalSpent}</TableCell>
       </TableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
@@ -104,7 +104,7 @@ function Row({ category }: RowProps) {
                         {expense.date}
                       </TableCell>
                       <TableCell>{expense.description}</TableCell>
-                      <TableCell align="right">{expense.amount}</TableCell>
+                      <TableCell align="right">${expense.amount}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>

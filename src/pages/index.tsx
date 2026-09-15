@@ -1,18 +1,10 @@
 import RecentExpenses from "@/components/RecentExpenses";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { BudgetWithCategoryAndExpenses, CategorySpending, Expense, ExpenseWithCategory } from "@/types/types";
 import Spinner from "@/components/Spinner";
-import { fetchBudgetswithExpenses } from "@/utils/api/budgetApi";
-import { BudgetTable } from "@/components/BudgetTable";
-import { fetchExpenses, fetchExpensesTotalAmount } from "@/utils/api/expensesApi";
 import { ExpenseDrawer } from "@/components/ExpenseDrawer";
 import { CategoriesTable } from "@/components/CategoriesTable";
 import { fetchDashboardData } from "@/utils/api/dashboardApi";
-import { CategoryBudget } from "@/components/CategoryBudget";
-
-interface ExpensesTable extends Expense {
-  category: { name: string }
-}
 
 export default function Dashboard() {
   const [expenses, setExpenses] = useState<ExpenseWithCategory[]>([]);

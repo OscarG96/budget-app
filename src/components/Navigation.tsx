@@ -99,7 +99,9 @@ export default function DesktopAppBar() {
             bottom: 0,
             left: 0,
             right: 0,
+            zIndex: 1300,
             backgroundColor: "#fff",
+            boxShadow: "0 -1px 6px rgba(0,0,0,0.08)",
           }}
         >
           <MobileBottomNavigation />
