@@ -22,7 +22,7 @@ export class ExpensesRepository {
         id: "desc", 
       },
       where: { authorId: user.id, ...filters },
-      take: Number(queryParams.limit) || 100,
+      take: Number(queryParams.limit) || 1000,
       include: {
         category: true
       }
