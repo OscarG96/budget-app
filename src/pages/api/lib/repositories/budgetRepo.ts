@@ -35,7 +35,8 @@ export class BudgetRepo {
               date: {
                 gte: startDate,
                 lte: endDate
-              }
+              },
+              authorId: user.id
             }
         }}
       } }
