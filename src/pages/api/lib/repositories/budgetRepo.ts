@@ -1,6 +1,6 @@
-import { Budget, User } from "@prisma/client";
+import type { User } from "@prisma/client";
 import { prisma } from "../prisma";
-import { CreateBudget } from "../../schemas/schemas";
+import type { CreateBudget } from "../../schemas/schemas";
 
 
 

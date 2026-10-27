@@ -1,6 +1,5 @@
 import React from 'react';
-import { Expense } from '@/types/types';
-import AddIcon from '@mui/icons-material/Add';
+import type { Expense } from '@/types/types';
 import {
   Box,
   Button,

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   Autocomplete,
   Box,
@@ -11,7 +11,7 @@ import {
 import { createOrUpdateBudget, fetchBudgetswithExpenses } from '@/utils/api/budgetApi';
 import { fetchCategories } from '@/utils/api/categoriesApi';
 import Spinner from '@/components/Spinner';
-import { Category, BudgetWithCategory, BudgetWithCategoryAndExpenses } from '@/types/types';
+import type { Category, BudgetWithCategoryAndExpenses } from '@/types/types';
 import { CategoriesDialog } from '@/components/CategoriesDrawer';
 import { BudgetTable } from '@/components/BudgetTable';
 import { toast } from 'react-toastify';
@@ -26,7 +26,7 @@ const BudgetPage = () => {
   const currentMonth = currentDate.getMonth() + 1
   const currentYear = currentDate.getFullYear()
 
-  const fetchBudgetData = async () => {
+  const fetchBudgetData = useCallback(async () => {
     try {
       setLoading(true);
 
@@ -41,11 +41,11 @@ const BudgetPage = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [currentMonth, currentYear]);
 
   useEffect(() => {
     fetchBudgetData();
-  }, [currentMonth, currentYear]);
+  }, [fetchBudgetData]);
 
   useEffect(() => {
     fetchCategories()
