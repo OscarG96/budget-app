@@ -51,7 +51,7 @@ import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import { CategorySpending } from "@/types/types"
+import type { CategorySpending } from "@/types/types"
 
 type CategoriesTableProps = {
   categories: CategorySpending[]

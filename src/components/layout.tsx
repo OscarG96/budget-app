@@ -1,8 +1,6 @@
 import dynamic from "next/dynamic";
-import Footer from './footer'
 
 // import "react-toastify/dist/ReactToastify.css";
-import Navigation from "./Navigation";
 import ResponsiveAppBar from "./AppBar";
 
 const ToastContainer = dynamic(

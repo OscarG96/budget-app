@@ -1,15 +1,15 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { Session } from "next-auth";
-import { CategoriesService } from "./lib/services/categoriesService";
+import type { Session } from "next-auth";
 import { UsersService } from "./lib/services/usersService";
-import { GetCategoriesSpentSchema, GetExpensesSchema } from "./schemas/schemas";
+import { GetExpensesSchema } from "./schemas/schemas";
 import { ExpensesService } from "./lib/services/expensesService";
+import type { User } from "@prisma/client";
 type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE';
 type Handler = (req: AuthenticatedRequest, res: NextApiResponse) => Promise<void>;
 
 interface AuthenticatedRequest extends NextApiRequest {
   session: Session;
-  user?: any;
+  user: User;
 }
 
 const handlers: Record<HttpMethod, Handler> = {

@@ -1,6 +1,6 @@
 import RecentExpenses from "@/components/RecentExpenses";
 import { useEffect, useState } from "react";
-import { BudgetWithCategoryAndExpenses, CategorySpending, Expense, ExpenseWithCategory } from "@/types/types";
+import type { CategorySpending, ExpenseWithCategory } from "@/types/types";
 import Spinner from "@/components/Spinner";
 import { ExpenseDrawer } from "@/components/ExpenseDrawer";
 import { CategoriesTable } from "@/components/CategoriesTable";
@@ -8,7 +8,6 @@ import { fetchDashboardData } from "@/utils/api/dashboardApi";
 
 export default function Dashboard() {
   const [expenses, setExpenses] = useState<ExpenseWithCategory[]>([]);
-  const [budgetWithCategoryAndExpenses, setbudgetWithCategoryAndExpenses] = useState<BudgetWithCategoryAndExpenses[]>([]);
   const [categoriesWithTotalSpent, setCategoriesWithTotalSpent] = useState<CategorySpending[]>([]);
   const [totalExpensesAmount, setTotalExpensesAmount] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -30,7 +29,6 @@ export default function Dashboard() {
 
   const handleExpenseCreated = (expense: ExpenseWithCategory) => {
     setExpenses(prev => [expense, ...prev]);
-    console.log(expense);
   };
 
   if (loading) {
